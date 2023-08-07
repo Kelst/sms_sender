@@ -1,0 +1,16 @@
+.container {
+    
+    max-width: 1656px;
+    
+    margin: 0 auto;
+    @apply bg-slate-500 mt-8 bg-slate-200;
+}
+.title{
+    @apply text-2xl  p-3 border-double;
+}
+.title_strong{
+    @apply font-bold ;
+}
+.content{
+    @apply flex flex-row  justify-around gap-96;
+}
