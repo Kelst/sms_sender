@@ -1,15 +1,14 @@
 import React from 'react'
-import ListItem from './ListItem'
 import ListItemStatus from './ListItemStatus'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-function ListStatusComponent({smsList,width=600,totalMessages ,handleScroll}) {
+function ListHistoryComponent({smsList,width=600}) {
 
   return (
 	 <div className="w-[1200px]  mt-20 pl-4  h-full flex flex-col rounded-xl" >
-                    <div class="bg-zinc-700  text-white text-center font-bold text-2xl px-5 py-2 shadow rounded-md border-gray-300">
-                        Tracking sms ( {totalMessages} )
+                    <div class="bg-zinc-700 text-sm text-white text-center font-bold text-2xl px-5 py-2 shadow rounded-md border-gray-300">
+                        Tracking sms ( {smsList.length} )
                     </div>
-                    <div  onScroll={e=>handleScroll(e)}  className="w-full h-[400px]  overflow-auto shadow  bg-slate-200" id="journal-scroll">
+                    <div className="w-full h-[400px]  overflow-auto shadow  bg-slate-200" id="journal-scroll">
                     <table class="w-full ">
                         <tbody >
                             {smsList.length>0?
@@ -32,4 +31,4 @@ function ListStatusComponent({smsList,width=600,totalMessages ,handleScroll}) {
   )
 }
 
-export default ListStatusComponent
+export default ListHistoryComponent

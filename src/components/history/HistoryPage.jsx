@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import InfoBars from '../info/InfoBars';
 import LoaderData from '../loaderData/LoaderData';
+import ListHistoryComponent from '../listComponent/ListHistoryComponent';
 
 export default function HistoryPage() {
   const [user,setUser]=useState("")
@@ -184,7 +185,7 @@ export default function HistoryPage() {
         
     <div  className="grid place-items-center ">
       <div >
-        <ListStatusComponent  smsList={smsList}/> 
+        <ListHistoryComponent  smsList={smsList}/> 
       </div>
     
     </div>
