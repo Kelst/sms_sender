@@ -2,6 +2,7 @@ import React from 'react'
 import styles from  "./header.module.css"
 import { Link, NavLink, Outlet } from 'react-router-dom'
 function Header() {
+  
   return (
     <>
     <header>
@@ -11,7 +12,7 @@ function Header() {
                <li className={styles.menu_item}>
                 <NavLink 
                   className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles.active : ""
-                  } to='/'>SMS</NavLink></li>
+                  } to='sms'>SMS</NavLink></li>
                 <li className={styles.menu_item}><NavLink
                 className={({ isActive, isPending }) =>
                 isPending ? "pending" : isActive ? styles.active : ""

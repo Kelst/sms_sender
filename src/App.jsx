@@ -9,13 +9,18 @@ import Header from './components/header/Header'
 import SMSPage from './components/sms/SMSPage';
 import HistoryPage from './components/history/HistoryPage';
 import StatusPage from './components/status/StatusPage';
+import LoginPage from './components/login/Login';
+import AuthGuard from './components/auth/AuthGuard';
+
 let router = createBrowserRouter([
   {
+    
     element:<Header/>,
     children:
 [  
+
   {
-    path: "/",
+    path: "/sms",
     element:<SMSPage/>
   },
   {
@@ -26,7 +31,16 @@ let router = createBrowserRouter([
   {
     path:"/status",
     element:<StatusPage/>
-  }]
+  },
+
+],
+
+
+  
+},
+{
+  path: "/login", 
+  element: <LoginPage />
 }
 ]);
 function App() {

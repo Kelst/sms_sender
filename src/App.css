@@ -1,4 +1,8 @@
 .container{
   max-width: 1656px;
   margin: 0 auto;
+
+}
+body{
+  overflow:hidden
 }

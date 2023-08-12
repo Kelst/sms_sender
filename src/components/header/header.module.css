@@ -1,13 +1,16 @@
 .nav{
-    @apply mt-1 mx-2 rounded-t-2xl text-white bg-zinc-700 h-20 px-6 flex items-center justify-between text-3xl shadow-2xl;
+    @apply  m-auto mt-1 mx-2 rounded-t-2xl text-white bg-zinc-700 h-20 px-6 flex items-center justify-between text-3xl shadow-2xl;
 }
 .menu{
     @apply flex items-center  list-none;
 }
 .menu_item{
-    @apply mx-3 cursor-pointer hover:text-gray-400 hover:border-b-2;
+    @apply mx-3 cursor-pointer hover:text-red-500 hover:border-b-2;
 }
 
 .active {
-    @apply text-gray-400 border-b-2;
+    @apply text-red-500 border-b-2;
+}
+.logo{
+    @apply text-red-600 cursor-pointer text-5xl shadow-red-500 font-bold animate-bounce duration-1000;
 }

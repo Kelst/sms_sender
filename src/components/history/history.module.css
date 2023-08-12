@@ -1,0 +1,11 @@
+.container {
+    
+    max-width: 1456px ;
+    height: 100%;
+    margin: 0 auto;
+    
+    @apply bg-slate-500 mt-8 bg-slate-200 rounded-lg ;
+}
+.title{
+    @apply text-2xl  p-3 border-double ;
+}   

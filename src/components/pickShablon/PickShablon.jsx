@@ -77,7 +77,7 @@ export default function PickShablon({setShablon}) {
               value={value}
               control={<Radio />}
               label={labelsData[value]}
-              className='mt-2 border-2 border-slate-400		'
+              className='mt-2 shadow-slate-600	'
             />
           ))}
           
