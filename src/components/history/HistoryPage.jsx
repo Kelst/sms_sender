@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import ListStatusComponent from '../listComponent/ListStatusComponent'
 import styles from "./history.module.css"
 import { Button, TextField } from '@mui/material';
 import FilterHistory from '../groupRadioButton/FilterHistory';
-
+import DownloadIcon from '@mui/icons-material/Download';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,6 +30,26 @@ export default function HistoryPage() {
   function showInfo(text){
     setTextResp(text)
     setInfoBars(true)
+  }
+ async function handleDownloadDate() {
+  setLoading(true)
+    try {
+      const response = await axios.get('http://194.8.147.150:3001/download', {
+        responseType: 'blob',
+      });
+      setLoading(false)
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'messages.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Видалити елемент після завантаження
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+    
   }
   async function handleDateChange(e){
     if(filteredValue=="all")
@@ -170,8 +189,9 @@ export default function HistoryPage() {
         )
           }
           
-          <div className='mt-5'>
+          <div className='mt-5 flex gap-5'>
             <Button variant='outlined' onClick={handleDateChange}>GET</Button>
+            <Button variant='outlined' endIcon={<DownloadIcon/>} onClick={handleDownloadDate}>Download</Button>
           </div>
          
       

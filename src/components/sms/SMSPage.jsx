@@ -26,6 +26,8 @@ export default function SMSPage() {
   const [value, setValue] = useState('bot');
   const [filter, setFilter] = useState('tariff');
   const [ipAddress, setIpAddress] = useState('');
+  const [ipAddressOLT, setIpAddressOLT] = useState('');
+  const [sfpSelect, setSfpSelect] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [listOfUser,setListOfUser]=useState([])
   const [listOfSMS,setListOfSms]=useState([])
@@ -33,6 +35,7 @@ export default function SMSPage() {
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
   const [user,setUser]=useState("")
+  
   const navigate=useNavigate()
 
   
@@ -210,7 +213,7 @@ export default function SMSPage() {
       </div>
         </div >
          <div className=' mr-[200px]'>
-          <FilterRadioGroup  setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
+          <FilterRadioGroup ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
           <div className='flex flex-col justify-center items-start' >
           <TextField
           id="filled-multiline-static"

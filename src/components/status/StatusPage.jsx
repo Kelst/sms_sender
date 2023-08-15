@@ -69,9 +69,9 @@ async function getTotal() {
   const total= await axios.get(`http://194.8.147.150:3001/totalSMS`)
   setTotalMessages(total)
 }
-const interval=setInterval(()=>{
-getTotal
-},5000)
+const interval=setInterval(async ()=>{
+   await  getTotal()
+},1000)
 
 
 return (()=>{
