@@ -49,6 +49,10 @@ console.log("scrollHeight ",scrollHeight);
   }
 };
 useEffect(() => {
+     const cookieData = Cookies.get('login');
+         if (!cookieData) {         navigate("/login")
+        }
+        setUser(cookieData)
   if (listRef.current) {
     listRef.current.addEventListener('scroll', handleScroll);
   }
@@ -67,10 +71,10 @@ useEffect(() => {
 
 async function getTotal() {
   const total= await axios.get(`http://194.8.147.150:3001/totalSMS`)
-  setTotalMessages(total)
+  setTotalMessages(total.data.total)
 }
 const interval=setInterval(async ()=>{
-   await  getTotal()
+     getTotal()
 },1000)
 
 
