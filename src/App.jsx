@@ -18,7 +18,10 @@ let router = createBrowserRouter([
     element:<Header/>,
     children:
 [  
-
+  {
+    path: "/",
+    element:<SMSPage/>
+  },
   {
     path: "/sms",
     element:<SMSPage/>

@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Tooltip from '@mui/material/Tooltip';
-import { Autocomplete, Button, Input, TextField } from '@mui/material';
+import { Autocomplete, Button, Input, Switch, TextField } from '@mui/material';
 import InfoBars from '../info/InfoBars';
 import options from './options';
 // const options = ['Option 1', 'Option 2'];
@@ -18,6 +18,8 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
   const [valueAddress, setValueAddress] = useState(options[0]);
   const [inputValue, setInputValue] = React.useState('');
   const [budId,setBudId]=useState('')
+  const [checked, setChecked] = React.useState(false);
+
   function showInfo(text){
     setTextResp(text)
     setInfoBars(true)
@@ -315,6 +317,42 @@ const handleSFP=(event)=>{
 }
 
   }
+  const handleGetNumbersByAddress=async (event)=> {
+      event.preventDefault();
+      setLoading(true)
+      await getDataByAddress(valueAddress,budId)
+  }
+  const handleGetNumbersByTariff=async(event)=>{
+    event.preventDefault();
+    setLoading(true)
+    await getDataById(tarNumbers)
+  }
+  const handleGetNumbersBySwitch=async(event)=>{
+    event.preventDefault();
+      setLoading(true)
+      await getDataByIPSwitches(ipAddress)
+  }
+  const handleChangeCheck = (event) => {
+    event.preventDefault();
+    setChecked(event.target.checked);
+  };
+  const handleGetNumbersByOLT=async (event)=>{
+    event.preventDefault();
+    if(sfpSelect==""&&checked==true){
+      showInfo("Введіть сфп, приклад: 1-16")
+      return
+    }
+    if (checked==true){
+setLoading(true)
+await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
+    }else{
+      
+      setSfpSelect("")
+      setLoading(true)
+      await getDataByIPOLTAll(ipAddressOLT)
+    }
+
+  }
   return (
     <FormControl>
       <InfoBars open={infoBars} setOpen={setInfoBars} text={textResp} />
@@ -326,13 +364,14 @@ const handleSFP=(event)=>{
       row
       onChange={handleChange}
     >
+      <FormControlLabel className='text' value="none" control={<Radio />} label="None" />
       <FormControlLabel className='text' value="tariff" control={<Radio />} label="Тариф" />
       <FormControlLabel value="olt" control={<Radio />} label="ОЛТ" />
       <FormControlLabel value="switches" control={<Radio />} label="Комутатор" />
       <FormControlLabel value="adress" control={<Radio />} label="За адресою" />
       
     </RadioGroup>
-    {value=='tariff'&& <TextField
+    {value=='tariff'&& <div className=''><TextField
           id="filled-multiline-static"
           label="Введіть номер тарифного плану"
           type='number'
@@ -341,8 +380,12 @@ const handleSFP=(event)=>{
           onChange={handleNumbers}
           onKeyDown={handleKeyDown}
 
-        />}
-        {value=='switches'&& <TextField
+        />
+        <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersByTariff}  variant="outlined">Витягнути номера телефонів</Button></div>
+       
+        </div>}
+
+        {value=='switches'&& <div> <TextField
           id="filled-multiline-static"
           label="Введіть ip обладнання"
           type='text'
@@ -351,8 +394,15 @@ const handleSFP=(event)=>{
           onChange={handleIp}
           onKeyDown={handleKeyDownSwitches}
 
-        />}
+        />
+                <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersBySwitch}  variant="outlined">Витягнути номера телефонів</Button></div>
+
+        </div>
+        
+        
+        }
          {value=='olt'&& <div className='flex flex-col'>
+          <div>
           <TextField
           id="filled-multiline-static"
           label="Введіть ip обладнання"
@@ -363,7 +413,14 @@ const handleSFP=(event)=>{
            onKeyDown={handleKeyDownOLT}
 
         />
-                  <TextField
+         <Switch
+        checked={checked}
+        onChange={handleChangeCheck}
+        inputProps={{ 'aria-label': 'controlled' }}
+      />
+        </div>
+             
+      {checked&&    <TextField
           id="filled-multiline-static"
           label="Введіть sfp"
           type='number'
@@ -372,9 +429,10 @@ const handleSFP=(event)=>{
           onChange={handleSFP}
           onKeyDown={handleKeyDownOLTSFP}
 
-        />
+        />}
+          <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersByOLT}  variant="outlined">Витягнути номера телефонів</Button></div>
         </div> 
-        }
+        } 
 
          {value=='adress'&& 
          <div>
@@ -404,6 +462,9 @@ const handleSFP=(event)=>{
            onKeyDown={handleKeyDownAdressBudId}
 
         />
+        <div className='ml-2 mb-2'>
+        <Button  onClick={handleGetNumbersByAddress}  variant="outlined">Витягнути номера телефонів</Button>
+        </div>
        </div>
         }
     

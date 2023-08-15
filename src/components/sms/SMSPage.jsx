@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import zlib from "react-zlib-js"
+import zlib, { log } from "react-zlib-js"
 
 import styles from "./smspage.module.css"
 import TextField from '@mui/material/TextField';
@@ -24,7 +24,7 @@ export default function SMSPage() {
   const [tarNumbers,setTarNumbers]=useState('')
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('bot');
-  const [filter, setFilter] = useState('tariff');
+  const [filter, setFilter] = useState('none');
   const [ipAddress, setIpAddress] = useState('');
   const [ipAddressOLT, setIpAddressOLT] = useState('');
   const [sfpSelect, setSfpSelect] = useState('');
@@ -64,11 +64,59 @@ export default function SMSPage() {
     fetchData()
     
   },[])
-
-    function handleSendSms(e){
+  function parseNumberStrings(inputString) {
+    const numberGroups = inputString.split(/\s|,/); 
+    const numberStrings = [];
+  
+    for (const group of numberGroups) {
+      if (group.trim() !== '') {
+        numberStrings.push(group.trim()); 
+      }
+    }
+  
+    return numberStrings;
+  }
+    async function handleSendSms(e){
       e.preventDefault()
-      
+      let lists=[]
+      if(filter==='none'){
+       
+        let numbersplit=numbers.split("\n")
+        let forRequest=[]
+        numbersplit.forEach(e=>{
+          forRequest=[...forRequest,...parseNumberStrings(e)]
+        })
+        
 
+        let numCheck=forRequest.map(e=>{
+          if(e.startsWith('0')){
+            return '38'+e
+          }
+          if (e.startsWith('8')) {
+            return '3'+e
+          }
+          return e
+        }).join(',')
+        // numCheck=numCheck.slice(0, -1)
+        setNumbers(forRequest.join('\n'))
+        const response = await axios.get(`http://194.8.147.150:3001/infoByUser?numbers=${numCheck}`);
+        let data=response.data
+        
+         lists=data.map(e=>{
+          return {
+            id:e.id,
+            contacts:{
+              value:e.tel
+            }
+          }
+        })
+        console.log("sss",lists);
+        setListOfUser(lists)
+        
+       
+      }
+
+      console.log("aaaa",listOfUser);
     function replaceLogText(inputText, log) {
      let  sms=inputText
       if (sms.includes('[log]')) {
@@ -83,9 +131,33 @@ export default function SMSPage() {
       return    sms.replace(/\[tar\]/g, tariff?.name);
     } 
     return sms;
-}
+}   
+let smsList=[]
+    if(filter=='none'){
+       smsList= lists.map(e=>{
+        let sms=replaceLogText(shablon,e.id)
+       if(tarNumbers!=""){
+         sms=replaceTarText(sms,tarNumbers)
+       }
+       console.log( {
+         id:e.id,
+         tel:e.contacts.value,
+         sms:sms,
+         type:value,
+         sender_sms:user
+       });
+       return {
+         id:e.id,
+         tel:e.contacts.value,
+         sms:sms,
+         type:value,
+         sender_sms:user
+       }
+     })
+    
+    }else{
 
-    let smsList= listOfUser.map(e=>{
+     smsList= listOfUser.map(e=>{
        let sms=replaceLogText(shablon,e.id)
       if(tarNumbers!=""){
         sms=replaceTarText(sms,tarNumbers)
@@ -105,7 +177,7 @@ export default function SMSPage() {
         sender_sms:user
       }
     })
-   
+  }
 
     setListOfSms(smsList)
 

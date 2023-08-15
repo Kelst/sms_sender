@@ -27,6 +27,7 @@ console.log("NEW REAUST");
   axios.get(`http://194.8.147.150:3001/messages?page=${currentPage + 1}`)
     .then(response => {
       const newMessages = response.data.messages;
+      
       setSmsLists(prevMessages => [...prevMessages, ...newMessages]);
       setCurrentPage(prevPage => prevPage + 1);
     })
@@ -61,7 +62,7 @@ useEffect(() => {
     .then(response => {
       const initialMessages = response.data.messages;
       const total = response.data.totalMessages;
-
+      console.log(initialMessages);
       setSmsLists(initialMessages);
       setTotalMessages(total);
     })
@@ -73,6 +74,19 @@ async function getTotal() {
   const total= await axios.get(`http://194.8.147.150:3001/totalSMS`)
   setTotalMessages(total.data.total)
 }
+const interval1=setInterval(async()=>{
+  axios.get(`http://194.8.147.150:3001/messages?page=1`)
+  .then(response => {
+    const initialMessages = response.data.messages;
+    const total = response.data.totalMessages;
+    console.log(initialMessages);
+    setSmsLists(initialMessages);
+    setTotalMessages(total);
+  })
+  .catch(error => {
+    console.error('Error loading initial messages:', error);
+  });
+},4000)
 const interval=setInterval(async ()=>{
      getTotal()
 },1000)
@@ -83,6 +97,7 @@ return (()=>{
     listRef.current.removeEventListener('scroll', handleScroll);
   }
   clearInterval(interval)
+  clearInterval(interval1)
 })
 }, []);
 
