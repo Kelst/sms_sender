@@ -34,6 +34,7 @@ export default function SMSPage() {
   const [listOfTariff,setListOfTariff]=useState([])
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
+  
   const [user,setUser]=useState("")
   
   const navigate=useNavigate()
@@ -51,17 +52,17 @@ export default function SMSPage() {
           navigate("/login")
         }
         setUser(cookieData)
-    async function fetchData(){
-      try{
-        const response = await axios.get('http://194.8.147.150:3001/getTariff');
-        setListOfTariff(response.data)
-        console.log(response.data);
-        }
-        catch(e){
-          console.log(e);
-        }
-    }
-    fetchData()
+    // async function fetchData(){
+    //   try{
+    //     const response = await axios.get('http://194.8.147.150:3001/getTariff');
+    //     setListOfTariff(response.data)
+    //     console.log(response.data);
+    //     }
+    //     catch(e){
+    //       console.log(e);
+    //     }
+    // }
+    // fetchData()
     
   },[])
   function parseNumberStrings(inputString) {
@@ -101,22 +102,20 @@ export default function SMSPage() {
         setNumbers(forRequest.join('\n'))
         const response = await axios.get(`http://194.8.147.150:3001/infoByUser?numbers=${numCheck}`);
         let data=response.data
-        
          lists=data.map(e=>{
           return {
             id:e.id,
+            uid:e.uid,
             contacts:{
               value:e.tel
             }
           }
         })
-        console.log("sss",lists);
         setListOfUser(lists)
         
        
       }
 
-      console.log("aaaa",listOfUser);
     function replaceLogText(inputText, log) {
      let  sms=inputText
       if (sms.includes('[log]')) {
@@ -124,11 +123,17 @@ export default function SMSPage() {
       } 
       return sms;
   }
+  function replaceBalText(inputText, bal) {
+    let  sms=inputText
+     if (sms.includes('[bal]')) {
+      return  sms.replace(/\[bal\]/g, bal);
+     } 
+     return sms;
+ }
   function replaceTarText(inputText, tar) {
-   let sms=inputText
-   let tariff=listOfTariff.find(e=>e.tp_id==tar)
+    let  sms=inputText
     if (sms.includes('[tar]')) {
-      return    sms.replace(/\[tar\]/g, tariff?.name);
+     return  sms.replace(/\[tar\]/g, tar);
     } 
     return sms;
 }   
@@ -139,15 +144,17 @@ let smsList=[]
        if(tarNumbers!=""){
          sms=replaceTarText(sms,tarNumbers)
        }
-       console.log( {
-         id:e.id,
-         tel:e.contacts.value,
-         sms:sms,
-         type:value,
-         sender_sms:user
-       });
+      //  console.log( {
+      //    id:e.id,
+      //    uid:e.uid,
+      //    tel:e.contacts.value,
+      //    sms:sms,
+      //    type:value,
+      //    sender_sms:user
+      //  });
        return {
          id:e.id,
+         uid:e.uid,
          tel:e.contacts.value,
          sms:sms,
          type:value,
@@ -157,11 +164,15 @@ let smsList=[]
     
     }else{
 
-     smsList= listOfUser.map(e=>{
+     smsList= await Promise.all(listOfUser.map( async e=>{
+
+      const resptar= await axios.get(`http://194.8.147.150:3001/tariff?uid=${e.uid}`)
+      const respbal=await axios.get(`http://194.8.147.150:3001/balance?uid=${e.uid}`)
        let sms=replaceLogText(shablon,e.id)
-      if(tarNumbers!=""){
-        sms=replaceTarText(sms,tarNumbers)
-      }
+  
+       sms=replaceTarText(sms,resptar.data)
+        sms=replaceBalText(sms,respbal.data)
+     
       console.log( {
         id:e.id,
         tel:e.contacts.value,
@@ -176,9 +187,9 @@ let smsList=[]
         type:value,
         sender_sms:user
       }
-    })
+    }))
   }
-
+   
     setListOfSms(smsList)
 
   }
@@ -312,9 +323,10 @@ let smsList=[]
       
      <DialogShow open={open} setOpen={setOpen} text={`За допомогою цього поля ви можете 
      сформувати шаблон sms повідомлення:\nу квадратні дужки ви можете
-      вставити наступні дані [tar],[log],[pas] приклад:\n
-      Шановний абонент ваш логін [log] пароль від особистого кабінету[pas].
-      Ваш тарифний план [tar] буде зміненно!.
+      вставити наступні дані [tar],[log],[bal]:\n
+      \n [tar]-тарифний план
+      \n[log]-логін
+      \n[bal]-баланс
       `}/>
     </div>
     

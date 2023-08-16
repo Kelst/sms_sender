@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ListItem({login="testlogin",textMessage="default sms",date="7:25",typeSender=false,success=true,num}) {
+export default function ListItem({login="testlogin",textMessage="default sms",date="7:25",typeSender,success=true,num}) {
     function formatTime(hours, minutes) {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
@@ -8,8 +8,15 @@ export default function ListItem({login="testlogin",textMessage="default sms",da
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
     const currentMinute = currentDate.getMinutes();
+  let typeSms=""
+  if(typeSender=='bot'){
+    typeSms=<div class="leading-1 text-blue-900 font-bold">TELEGRAM BOT</div>
+  }else if(typeSender=='sms'){
+    typeSms= <div class="leading-1 text-blue-600 font-bold">TURBO SMS</div>
+  }else {
+    typeSms=<div class="leading-1 text-blue-500 font-bold">TELEGRAM/TURBO</div>
+  }
 
-   const typeSms=typeSender==true? <div class="leading-1 text-blue-900 font-bold">TELEGRAM BOT</div>: <div class="leading-1 text-blue-600 font-bold">TURBO SMS</div>
   return (
     <tr class="relative  transform scale-100 text-xs py-1 border-b-2 border-blue-100 cursor-default ">
     <td class="pl-5 pr-3 whitespace-no-wrap">

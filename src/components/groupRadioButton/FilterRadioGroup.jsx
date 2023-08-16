@@ -51,7 +51,7 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
           return  keepOnlyNumbers(e.contacts.value)
       })
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
-      console.log(response.data);
+      // console.log(response.data);
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
     
@@ -93,7 +93,7 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
           return  keepOnlyNumbers(e.contacts.value)
       })
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
-      console.log(response.data);
+      // console.log(response.data);
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
     
@@ -134,7 +134,7 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
           return  keepOnlyNumbers(e.contacts.value)
       })
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
-      console.log(response.data);
+      // console.log(response.data);
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
     
@@ -176,7 +176,7 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
           return  keepOnlyNumbers(e.contacts.value)
       })
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
-      console.log(response.data);
+      // console.log(response.data);
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
     
@@ -194,6 +194,7 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
 
   const getDataByAddress= async () => {
     try {
+
       setNumbers('')
       setListOfSms([])
       setLoading(true); // Показываем loader
@@ -218,7 +219,6 @@ function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers
           return  keepOnlyNumbers(e.contacts.value)
       })
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
-      console.log(response.data);
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
     
@@ -243,6 +243,8 @@ const handleSFP=(event)=>{
 }
   const handleChange = (event) => {
     setValue(event.target.value);
+    setNumbers('')
+    setListOfSms([])
   };
   const handleNumbers = (event) => {
     setTarNumbers(event.target.value);

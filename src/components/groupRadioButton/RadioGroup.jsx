@@ -26,10 +26,11 @@ function RadioGroups({value,setValue,listOfSMS,setListOfSms}) {
       name="controlled-radio-buttons-group"
       value={value}
       row
-      onChange={handleChange}
-    > <Tooltip  title="SMS відправляються ботом для номерів в яких є intelekt bot, інші номери відправляються через turbo sms " placement="top-end" arrow>
+      onChange={handleChange}>
       <FormControlLabel className='text' value="bot" control={<Radio />} label="Telegram Bot" />
       <FormControlLabel value="sms" control={<Radio />} label="Turbo SMS" />
+      <Tooltip  title="SMS відправляються ботом для номерів в яких є intelekt bot, інші номери відправляються через turbo sms " placement="top-end" arrow>
+      <FormControlLabel value="telegram_sms" control={<Radio />} label="Telegram/TURBO" />
            </Tooltip>
 
     </RadioGroup>
