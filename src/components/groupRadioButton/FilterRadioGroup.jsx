@@ -6,12 +6,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Tooltip from '@mui/material/Tooltip';
-import { Autocomplete, Button, Input, Switch, TextField } from '@mui/material';
+import { Autocomplete, Button, Input, Switch, TextField, Typography } from '@mui/material';
 import InfoBars from '../info/InfoBars';
 import options from './options';
+import AntSwitch from './AntSwitch';
 // const options = ['Option 1', 'Option 2'];
 
-function FilterRadioGroup({setListOfSms,setListOfUser, value,setValue,tarNumbers,setTarNumbers,ipAddress,setIpAddress,setLoading,setNumbers,ipAddressOLT,setIpAddressOLT,sfpSelect,setSfpSelect}) {
+function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, value,setValue,tarNumbers,setTarNumbers,ipAddress,setIpAddress,setLoading,setNumbers,ipAddressOLT,setIpAddressOLT,sfpSelect,setSfpSelect}) {
 
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
@@ -243,6 +244,7 @@ const handleSFP=(event)=>{
 }
   const handleChange = (event) => {
     setValue(event.target.value);
+    setCheckedLog(false)
     setNumbers('')
     setListOfSms([])
   };
@@ -338,6 +340,12 @@ const handleSFP=(event)=>{
     event.preventDefault();
     setChecked(event.target.checked);
   };
+  const handleChangeCheckLog = (event) => {
+    event.preventDefault();
+    setNumbers('')
+    setListOfSms([])
+    setCheckedLog(event.target.checked);
+  };
   const handleGetNumbersByOLT=async (event)=>{
     event.preventDefault();
     if(sfpSelect==""&&checked==true){
@@ -366,13 +374,23 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
       row
       onChange={handleChange}
     >
-      <FormControlLabel className='text' value="none" control={<Radio />} label="None" />
+      <FormControlLabel className='text' value="none" control={<Radio />} label="Вручну" />
       <FormControlLabel className='text' value="tariff" control={<Radio />} label="Тариф" />
       <FormControlLabel value="olt" control={<Radio />} label="ОЛТ" />
       <FormControlLabel value="switches" control={<Radio />} label="Комутатор" />
-      <FormControlLabel value="adress" control={<Radio />} label="За адресою" />
+      <FormControlLabel value="adress" control={<Radio />} label="Адреса" />
       
     </RadioGroup>
+    {value=='none'&& <div className=''>
+      <div className='flex items-center '>
+        <div className='mr-2'><Typography>Номери телефонів</Typography></div>
+    
+        <AntSwitch        
+         onChange={handleChangeCheckLog}
+  checked={checkedLog} size='xl' />
+        <div className='ml-2'><Typography>Логіни</Typography></div>
+        </div>
+        </div>}
     {value=='tariff'&& <div className=''><TextField
           id="filled-multiline-static"
           label="Введіть номер тарифного плану"

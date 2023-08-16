@@ -7,7 +7,10 @@ function Header() {
     <>
     <header>
         <nav className={styles.nav}>
-            <h1 className={styles.logo}>Intelekt</h1>
+          <div className='flex justify-center items-end'>
+            <h1 className={styles.logo}>Intelekt  </h1>
+            <h2 className='text-xl ml-2'>Сервіс відправлення повідомлень</h2> 
+            </div>
             <ul className={styles.menu}>
                <li className={styles.menu_item}>
                 <NavLink 

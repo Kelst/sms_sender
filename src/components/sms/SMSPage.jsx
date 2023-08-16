@@ -34,6 +34,8 @@ export default function SMSPage() {
   const [listOfTariff,setListOfTariff]=useState([])
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
+  const [checkedLog, setCheckedLog] = React.useState(false);
+
   
   const [user,setUser]=useState("")
   
@@ -77,10 +79,14 @@ export default function SMSPage() {
   
     return numberStrings;
   }
+  function removePunctuation(inputString) {
+    const punctuationRegex = /[,;?]/g;
+    return inputString.replace(punctuationRegex, '');
+  }
     async function handleSendSms(e){
       e.preventDefault()
       let lists=[]
-      if(filter==='none'){
+      if(filter==='none' && checkedLog==false){
        
         let numbersplit=numbers.split("\n")
         let forRequest=[]
@@ -101,6 +107,32 @@ export default function SMSPage() {
         // numCheck=numCheck.slice(0, -1)
         setNumbers(forRequest.join('\n'))
         const response = await axios.get(`http://194.8.147.150:3001/infoByUser?numbers=${numCheck}`);
+        let data=response.data
+         lists=data.map(e=>{
+          return {
+            id:e.id,
+            uid:e.uid,
+            contacts:{
+              value:e.tel
+            }
+          }
+        })
+        setListOfUser(lists)
+        
+       
+      }
+      if(filter==='none' && checkedLog==true){
+       
+        let numbersplit=numbers.split("\n")
+        let forRequest=[]
+        numbersplit.forEach(e=>{
+          forRequest=[...forRequest,removePunctuation(e)]
+        })
+        
+
+        let numCheck=forRequest.join(',')
+        // numCheck=numCheck.slice(0, -1)
+        const response = await axios.get(`http://194.8.147.150:3001/infoByUserLogins?logins=${numCheck}`);
         let data=response.data
          lists=data.map(e=>{
           return {
@@ -295,12 +327,13 @@ let smsList=[]
      
       </div>
         </div >
-         <div className=' mr-[200px]'>
-          <FilterRadioGroup ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
+         <div className=' mr-[200px] '>
+          <FilterRadioGroup checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
           <div className='flex flex-col justify-center items-start' >
           <TextField
           id="filled-multiline-static"
-          label="Номери телефонів"
+          
+          label={!checkedLog?' Введіть номери телефонів':' Введіть список логінів'} 
           multiline
           rows={10}
           
