@@ -165,6 +165,9 @@ export default function SMSPage() {
   function replaceTarText(inputText, tar) {
     let  sms=inputText
     if (sms.includes('[tar]')) {
+      if(tar=='немає тарифного плану абонент'){
+        return  sms.replace(/\[tar\]/g, '');
+      }
      return  sms.replace(/\[tar\]/g, tar);
     } 
     return sms;
@@ -221,7 +224,7 @@ let smsList=[]
       }
     }))
   }
-   
+   console.log(smsList);
     setListOfSms(smsList)
 
   }
