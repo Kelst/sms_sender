@@ -198,7 +198,7 @@ let smsList=[]
      })
     
     }else{
-
+setLoading(true)
      smsList= await Promise.all(listOfUser.map( async e=>{
 
       const resptar= await axios.get(`http://194.8.147.150:3001/tariff?uid=${e.uid}`)
@@ -226,6 +226,7 @@ let smsList=[]
   }
    console.log(smsList);
     setListOfSms(smsList)
+    setLoading(false)
 
   }
   const handleShablon = (event) => {
