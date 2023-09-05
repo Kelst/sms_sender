@@ -12,7 +12,7 @@ import options from './options';
 import AntSwitch from './AntSwitch';
 // const options = ['Option 1', 'Option 2'];
 
-function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, value,setValue,tarNumbers,setTarNumbers,ipAddress,setIpAddress,setLoading,setNumbers,ipAddressOLT,setIpAddressOLT,sfpSelect,setSfpSelect}) {
+function FilterRadioGroup({ group, setGroup,countFindNumbers,setCountFindNumvers,checkedLog,setCheckedLog,setListOfSms,setListOfUser, value,setValue,tarNumbers,setTarNumbers,ipAddress,setIpAddress,setLoading,setNumbers,ipAddressOLT,setIpAddressOLT,sfpSelect,setSfpSelect}) {
 
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
@@ -51,6 +51,7 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
           e.tel=keepOnlyNumbers(e.contacts.value)
           return  keepOnlyNumbers(e.contacts.value)
       })
+      setCountFindNumvers(resp.length)
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
       // console.log(response.data);
       setListOfUser(response.data)
@@ -93,6 +94,47 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
           e.tel=keepOnlyNumbers(e.contacts.value)
           return  keepOnlyNumbers(e.contacts.value)
       })
+      setCountFindNumvers(resp.length)
+      showInfo(`Знайдено ${resp.length} номерів телефонів`)
+      // console.log(response.data);
+      setListOfUser(response.data)
+      setNumbers(resp.join('\n'));
+    
+    }
+    else{
+      showInfo('За вказаною ip свіча немає жодного користувача')
+      setListOfUser([])
+    }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDataByGroup = async () => {
+    try {
+      setNumbers('')
+      setListOfSms([])
+      setLoading(true); // Показываем loader
+
+      const response = await axios.post('http://194.8.147.150:3001/getByGroup', {
+        group: group
+      });
+      if(response.data.length>0){
+      let resp=response.data.map(e=>{
+        if (e.contacts.value.startsWith('0'))
+            {e.tel=keepOnlyNumbers('38'+e.contacts.value)
+           return keepOnlyNumbers('38'+e.contacts.value)}
+         else  if (e.contacts.value.startsWith('8'))
+              {
+                e.tel=keepOnlyNumbers('3'+e.contacts.value)
+                return keepOnlyNumbers('3'+e.contacts.value)
+              }
+          e.tel=keepOnlyNumbers(e.contacts.value)
+          return  keepOnlyNumbers(e.contacts.value)
+      })
+      setCountFindNumvers(resp.length)
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
       // console.log(response.data);
       setListOfUser(response.data)
@@ -109,7 +151,7 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
       setLoading(false);
     }
   };
-
+  
   const getDataByIPOLTAll= async () => {
     try {
       setNumbers('')
@@ -134,6 +176,7 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
           e.tel=keepOnlyNumbers(e.contacts.value)
           return  keepOnlyNumbers(e.contacts.value)
       })
+      setCountFindNumvers(resp.length)
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
       // console.log(response.data);
       setListOfUser(response.data)
@@ -176,6 +219,7 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
           e.tel=keepOnlyNumbers(e.contacts.value)
           return  keepOnlyNumbers(e.contacts.value)
       })
+      setCountFindNumvers(resp.length)
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
       // console.log(response.data);
       setListOfUser(response.data)
@@ -219,6 +263,7 @@ function FilterRadioGroup({checkedLog,setCheckedLog,setListOfSms,setListOfUser, 
           e.tel=keepOnlyNumbers(e.contacts.value)
           return  keepOnlyNumbers(e.contacts.value)
       })
+      setCountFindNumvers(resp.length)
       showInfo(`Знайдено ${resp.length} номерів телефонів`)
       setListOfUser(response.data)
       setNumbers(resp.join('\n'));
@@ -243,6 +288,7 @@ const handleSFP=(event)=>{
   setSfpSelect(event.target.value)
 }
   const handleChange = (event) => {
+    setCountFindNumvers(0)
     setValue(event.target.value);
     setCheckedLog(false)
     setNumbers('')
@@ -254,6 +300,10 @@ const handleSFP=(event)=>{
   const handleIp = (event) => {
     setIpAddress(event.target.value);
   };
+  const handleGroup = (event) => {
+    setGroup(event.target.value);
+  };
+  
   const handleKeyDown = async (event) => {
     if (event.key === 'Enter'&&value=="tariff") {
       event.preventDefault();
@@ -336,6 +386,13 @@ const handleSFP=(event)=>{
       setLoading(true)
       await getDataByIPSwitches(ipAddress)
   }
+  
+  const handleGetNumbersByGroup=async(event)=>{
+    event.preventDefault();
+      setLoading(true)
+     
+      await getDataByGroup(group.trim())
+  }
   const handleChangeCheck = (event) => {
     event.preventDefault();
     setChecked(event.target.checked);
@@ -364,7 +421,7 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
 
   }
   return (
-    <FormControl>
+    <FormControl className='flex  justify-center'>
       <InfoBars open={infoBars} setOpen={setInfoBars} text={textResp} />
     <FormLabel id="demo-controlled-radio-buttons-group">Вибрати номери телефонів</FormLabel>
     <RadioGroup
@@ -373,14 +430,17 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
       value={value}
       row
       onChange={handleChange}
+      className='flex '
     >
       <FormControlLabel className='text' value="none" control={<Radio />} label="Вручну" />
       <FormControlLabel className='text' value="tariff" control={<Radio />} label="Тариф" />
       <FormControlLabel value="olt" control={<Radio />} label="ОЛТ" />
       <FormControlLabel value="switches" control={<Radio />} label="Комутатор" />
       <FormControlLabel value="adress" control={<Radio />} label="Адреса" />
+      <FormControlLabel value="group" control={<Radio />} label="Група" />
       
     </RadioGroup>
+    <div className='flex '>
     {value=='none'&& <div className=''>
       <div className='flex items-center '>
         <div className='mr-2'><Typography>Номери телефонів</Typography></div>
@@ -404,7 +464,21 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
         <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersByTariff}  variant="outlined">Витягнути номера телефонів</Button></div>
        
         </div>}
+        {
+          value=="group"&& <div> <TextField
+          id="filled-multiline-static"
+          label="Введіть номер групи"
+          type='text'
+          style={{width:'260px;'}}
+          value={group}
+          onChange={handleGroup}
+         
 
+        />
+                <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersByGroup}  variant="outlined">Витягнути номера телефонів</Button></div>
+
+        </div>
+        }
         {value=='switches'&& <div> <TextField
           id="filled-multiline-static"
           label="Введіть ip обладнання"
@@ -487,7 +561,7 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
         </div>
        </div>
         }
-    
+    </div>
   </FormControl>
   )
 }

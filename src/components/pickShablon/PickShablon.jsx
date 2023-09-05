@@ -17,6 +17,7 @@ import InfoBars from '../info/InfoBars';
 import Cookies from 'js-cookie';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { log } from 'react-zlib-js';
 
 export default function PickShablon({setShablon}) {
   const [open, setOpen] = React.useState(false);
@@ -45,8 +46,10 @@ export default function PickShablon({setShablon}) {
 
   async function fetchData() {
     try {
+    
       const resp = await axios.get('http://194.8.147.150:3001/getShablons');
       const respCreator = await axios.get(`http://194.8.147.150:3001/getShabCreator?creator=${user}`);
+      console.log(respCreator.data);
       const lData = {};
       
       resp.data.forEach((e, i) => {
@@ -56,6 +59,7 @@ export default function PickShablon({setShablon}) {
       lData[`sh0`] = 'None';
       setLabelsData(lData);
       setDataForDelete(respCreator.data)
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -65,10 +69,11 @@ export default function PickShablon({setShablon}) {
   let    cookieData = Cookies.get('login');
   setUser(cookieData)
     fetchData()
-  },[])
+  },[open])
 function checkDelete(date) {
  
   let flag=false
+  if(user=="kam"||user=="vlad_b"|| user=="sasha_v") return true
   dataForDelete.forEach(e=>{
     console.log(e.text);
     if(e.text==date) flag=true
@@ -166,8 +171,8 @@ const handleDelete =async (e)=>{
 
            }
           
-          {Object.keys(labelsData).map((value) => (
-            <div className='flex items-center  border-b'>
+          {Object.keys(labelsData).map((value,i) => (
+            <div className='flex items-center  border-b' key={i}>
               <div className=' mt-2 p-2'>
             <FormControlLabel
               key={value}

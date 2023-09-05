@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import { Button, Tooltip } from '@mui/material';
+import { Badge, Button, Tooltip } from '@mui/material';
 import DialogShow from '../dialog/DialogShow';
 import RadioGroups from '../groupRadioButton/RadioGroup';
 import FilterRadioGroup from '../groupRadioButton/FilterRadioGroup';
@@ -16,16 +16,19 @@ import ListComponent from '../listComponent/ListComponent';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-
+import MailIcon from '@mui/icons-material/Mail';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import InfoBars from '../info/InfoBars';
+import { list } from 'postcss';
 export default function SMSPage() {
   const [shablon,setShablon]=useState('')
   const [numbers,setNumbers]=useState('') 
   const [tarNumbers,setTarNumbers]=useState('')
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('bot');
+  const [value, setValue] = useState('telegram_sms');
   const [filter, setFilter] = useState('none');
   const [ipAddress, setIpAddress] = useState('');
+  const [group, setGroup] = useState('');
   const [ipAddressOLT, setIpAddressOLT] = useState('');
   const [sfpSelect, setSfpSelect] = useState('');
   const [loading, setLoading] = React.useState(false);
@@ -35,6 +38,7 @@ export default function SMSPage() {
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
   const [checkedLog, setCheckedLog] = React.useState(false);
+  const [countFindNumbers,setCountFindNumvers]=useState(0)
 
   
   const [user,setUser]=useState("")
@@ -117,6 +121,7 @@ export default function SMSPage() {
             }
           }
         })
+        setCountFindNumvers(lists.length)
         setListOfUser(lists)
         
        
@@ -199,31 +204,15 @@ let smsList=[]
     
     }else{
 setLoading(true)
-     smsList= await Promise.all(listOfUser.map( async e=>{
-
-      const resptar= await axios.get(`http://194.8.147.150:3001/tariff?uid=${e.uid}`)
-      const respbal=await axios.get(`http://194.8.147.150:3001/balance?uid=${e.uid}`)
-       let sms=replaceLogText(shablon,e.id)
-  
-       sms=replaceTarText(sms,resptar.data)
-        sms=replaceBalText(sms,respbal.data)
-     
-      console.log( {
-        id:e.id,
-        tel:e.contacts.value,
-        sms:sms,
-        type:value,
-        sender_sms:user
-      });
-      return {
-        id:e.id,
-        tel:e.contacts.value,
-        sms:sms,
-        type:value,
-        sender_sms:user
-      }
-    }))
+  let resp= await axios.post(`http://194.8.147.150:3001/tariff-balans`,{
+      listOfUser:listOfUser,
+      shablon:shablon,
+      value:value,
+      user:user
+     })
+      smsList=resp.data
   }
+ 
    console.log(smsList);
     setListOfSms(smsList)
     setLoading(false)
@@ -244,7 +233,7 @@ setLoading(true)
 
   const handleWriteDbSMS=()=>{
     setLoading(true)
-
+    setCountFindNumvers(0)
     zlib.deflate(JSON.stringify(listOfSMS), (err, compressedArray) => {
       if (err) {
         console.error('Error compressing array:', err);
@@ -331,9 +320,12 @@ setLoading(true)
      
       </div>
         </div >
-         <div className=' mr-[200px] '>
-          <FilterRadioGroup checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
+         <div className=' mr-[100px] '>
+          <FilterRadioGroup group={group} setGroup={setGroup} countFindNumbers={countFindNumbers} setCountFindNumvers={setCountFindNumvers} checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
           <div className='flex flex-col justify-center items-start' >
+          <Badge className='absolute left-[350px]' color='info' badgeContent={countFindNumbers} max={100999}>
+          <Tooltip title={"Кількість знайдених номерів"} placement="top"> <LocalPhoneIcon /> </Tooltip>
+</Badge>
           <TextField
           id="filled-multiline-static"
           
@@ -343,6 +335,7 @@ setLoading(true)
           
           value={numbers}
           onChange={handleNumbers}
+
         />
         <Tooltip title={shablon==="" || numbers===""?"Введіть текст повідомлення, та номери телефонів":""} placement="top-end">
           <div>

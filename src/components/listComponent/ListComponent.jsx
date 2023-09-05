@@ -17,8 +17,8 @@ function ListComponent({smsList,width=600}) {
                     <table class="w-full">
                         <tbody class="">
                             {smsList.length>0?
-                            smsList.map(e=>{
-                                return <ListItem  key={e.login} login={e.id} textMessage={e.sms} typeSender={e.type} num={e.tel} />
+                            smsList.map((e,i)=>{
+                                return <ListItem  key={i} login={e.id} textMessage={e.sms} typeSender={e.type} num={e.tel} />
                             })
                             :""}
                         
