@@ -10,6 +10,8 @@ import LoaderData from '../loaderData/LoaderData'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material'
+import { log } from 'react-zlib-js'
 export default function StatusPage() {
 
 const [smsLists,setSmsLists]=useState([])
@@ -21,7 +23,16 @@ const [user,setUser]=useState("")
 const [totalMessages, setTotalMessages] = useState(0);
 const [currentPage, setCurrentPage] = useState(1);
 const listRef = useRef(null); // Посилання на елемент списку
-
+const  handleResend= async ()=>{
+  
+let resp=await axios.get("http://194.8.147.150:3001/sendSms-api-to-user-again");
+let flag=resp.data
+if(flag){
+  showInfo("Повторно передано на відправку")
+}else{
+  showInfo("Помилка при повторному відправленні смс")
+}
+}
 const loadMoreMessages = () => {
 console.log("NEW REAUST");
   axios.get(`http://194.8.147.150:3001/messages?page=${currentPage + 1}`)
@@ -147,7 +158,9 @@ return (()=>{
         loading&& <LoaderData/>
       }
       <InfoBars open={infoBars} setOpen={setInfoBars} text={textResp} />
-      <div><h2 className={styles.title}>Перегляд відправки смс абонентам ({totalMessages}) </h2></div>
+      <div className='flex items-center'><h2 className={styles.title}>Перегляд відправки смс абонентам ({totalMessages}) </h2>
+      { user=="vlad_b"? <Button variant='outlined' onClick={handleResend} className=''>Resend</Button>:""}
+      </div>
     <div  className="grid place-items-center ">
       <div >
         <TransitionGroup>
