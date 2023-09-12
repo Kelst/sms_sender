@@ -299,11 +299,11 @@ setLoading(true)
           label="Шаблон sms"
           
           multiline
-          maxRows={40}
-          width="500px"
+          maxRows={5}
+          width="600px"
           variant="standard"
           className='focus:bg-slate-800'
-          style={{ width: '450px' }}
+          style={{ width: '550px' }}
           value={shablon}
           onChange={handleShablon}
         />

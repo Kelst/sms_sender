@@ -12,9 +12,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import InfoBars from '../info/InfoBars';
 import LoaderData from '../loaderData/LoaderData';
 import ListHistoryComponent from '../listComponent/ListHistoryComponent';
+import ModalChart from '../chart/ModalChart';
 
 export default function HistoryPage() {
   const [user,setUser]=useState("")
+  const [dataForChart,setDataForChart]=useState([])
   const [smsList,setSmsList]=useState("")
   const [filteredValue,setFilteredValue]=useState("all")
   const navigate=useNavigate()
@@ -25,8 +27,31 @@ export default function HistoryPage() {
   const [telSearch,setTelSearch]=useState("")
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
+  const [showChart,setShowChart]=useState(false)
   const [loading, setLoading] = React.useState(false);
+const handleGraphOpen=()=>{
 
+
+try {
+           axios.post('http://194.8.147.150:3001/getDateForChart',{startDate:selectedDate,endDate:selectedDateEnd})
+            .then(response=>{
+              const responseData = response.data;
+              console.log(responseData);
+              
+            setDataForChart(responseData);
+            setShowChart(!showChart)
+          })
+    
+            // Отримані дані з сервера
+          
+  
+  
+          } catch (error) {
+            console.error('Помилка під час запиту до сервера:', error);
+          }
+
+
+}
   function showInfo(text){
     setTextResp(text)
     setInfoBars(true)
@@ -108,6 +133,7 @@ export default function HistoryPage() {
   },[])
   return (
     <div className={styles.container}>
+      <ModalChart open={showChart} setOpen={setShowChart} dataForChart={dataForChart}/>
        {
         loading&& <LoaderData/>
       }
@@ -118,10 +144,11 @@ export default function HistoryPage() {
        
         <div className='flex flex-col '> 
           <FilterHistory value={filteredValue} setValue={setFilteredValue} />
+          <Button className='bg-gradient-to-r  from-cyan-500 to-blue-500' onClick={handleGraphOpen}><div className="text-white font-bold">Подивитись графік</div></Button>
           <div className='flex  mt-5 mb-7'>
             <div>
             <label>Початкова дата </label>
-       <DatePicker className="p-1 pl-3 rounded-xl "
+       <DatePicker className="p-1 pl-3 rounded-xl text-white "
         selected={selectedDate}
         onChange={date => setSelectedDate(date)}
         showTimeSelect
@@ -131,7 +158,7 @@ export default function HistoryPage() {
          </div>
          <div className='ml-20'>
        <label >Кінцева  дата </label>
-       <DatePicker className=" p-1  pl-3  rounded-xl   "
+       <DatePicker className=" p-1  pl-3  rounded-xl text-white  "
         selected={selectedDateEnd}
         onChange={date => setSelectedDateEnd(date)}
         showTimeSelect
