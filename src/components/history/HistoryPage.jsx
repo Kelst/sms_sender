@@ -6,6 +6,7 @@ import styles from "./history.module.css"
 import { Button, TextField } from '@mui/material';
 import FilterHistory from '../groupRadioButton/FilterHistory';
 import DownloadIcon from '@mui/icons-material/Download';
+import { createPortal } from 'react-dom';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -29,6 +30,7 @@ export default function HistoryPage() {
   const [textResp,setTextResp]=useState("")
   const [showChart,setShowChart]=useState(false)
   const [loading, setLoading] = React.useState(false);
+  const [countSMS,setCountSms]=useState({sms:0,bot:0})
 const handleGraphOpen=()=>{
 
 
@@ -39,6 +41,15 @@ try {
               console.log(responseData);
               
             setDataForChart(responseData);
+            
+            let countSmss=0
+            let countBot=0
+            responseData.forEach(element => {
+              countSmss+=element.sms
+              countBot+=element.telegram
+            });
+          
+            setCountSms({sms:countSmss,bot:countBot})
             setShowChart(!showChart)
           })
     
@@ -133,7 +144,12 @@ try {
   },[])
   return (
     <div className={styles.container}>
-      <ModalChart open={showChart} setOpen={setShowChart} dataForChart={dataForChart}/>
+      
+      {createPortal(
+      <ModalChart open={showChart} setOpen={setShowChart} dataForChart={dataForChart} countSMS={countSMS}/>
+      ,
+        document.body
+      )}
        {
         loading&& <LoaderData/>
       }

@@ -314,7 +314,7 @@ setLoading(true)
       </div>
       
       <PickShablon  setShablon={setShablon}/>
-      <div  className='flex flex-col items-start gap-4 ml-[-15px] '>
+      <div  className='flex flex-col items-start gap-4 ml-[-15px] mb-10'>
       <ListComponent  smsList={listOfSMS}/>
       {listOfSMS.length>0? <Button onClick={handleWriteDbSMS} variant="outlined"  className=''>Відправити sms</Button>: <Button  variant="outlined"  disabled  className=''>Відправити sms</Button>}
      
