@@ -14,6 +14,7 @@ function DialogShow({open,setOpen,text}) {
       setOpen(false);
     };
   return (
+   
     <Dialog
     open={open}
     onClose={handleClose}
