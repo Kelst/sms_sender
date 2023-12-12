@@ -160,12 +160,31 @@ function FilterRadioGroup({ group, setGroup,countFindNumbers,setCountFindNumvers
       setNumbers('')
       setListOfSms([])
       setLoading(true); // Показываем loader
-
-      const response = await axios.get('http://194.8.147.150:3001/oltNumbersAll', {
-        params: {
-          ip: ipAddressOLT,
-        }
-      });
+      function isDateFormatValid(dateString) {
+        const datePattern = /^\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}$/;
+        return datePattern.test(dateString);
+    }
+  let response 
+  
+  if(!isDateFormatValid(loginText))
+ {  response = await axios.get('http://194.8.147.150:3001/oltNumbersAll', {
+    params: {
+      ip: ipAddressOLT,
+      sfp:sfpSelect,
+      login:loginText,
+      
+    }
+  });}
+  else {
+    response = await axios.get('http://194.8.147.150:3001/oltNumbersAll', {
+    params: {
+      ip: ipAddressOLT,
+      sfp:sfpSelect,
+     
+      last_date:loginText
+    }
+  });
+  }
       if(response.data.length>0){
       let resp=response.data.map(e=>{
         if (e.contacts.value.startsWith('0'))
@@ -213,7 +232,7 @@ function FilterRadioGroup({ group, setGroup,countFindNumbers,setCountFindNumvers
           ip: ipAddressOLT,
           sfp:sfpSelect,
           login:loginText,
-          last_date:''
+          
         }
       });}
       else {
@@ -221,7 +240,7 @@ function FilterRadioGroup({ group, setGroup,countFindNumbers,setCountFindNumvers
         params: {
           ip: ipAddressOLT,
           sfp:sfpSelect,
-          login:'',
+         
           last_date:loginText
         }
       });
@@ -527,20 +546,21 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
            onKeyDown={handleKeyDownOLT}
 
         />
+        
          <Switch
         checked={checked}
         onChange={handleChangeCheck}
         inputProps={{ 'aria-label': 'controlled' }}
       />
-        </div>
-             
-      {checked&& <> 
-      <div className=' absolute top-[50%]  right-[50%] z-50 bg-slate-950  '>
-     
-        <DialogShow open={open} setOpen={setOpen} text={`
+      <DialogShow open={open} setOpen={setOpen} text={`
         За потреби можна просписати логін абонента, тоді з сфп витягнуться абоненти які одночасно перестали працювати разом з ним,
         корисно коли відпала не вся сфп, також можна записати Дата оновлення з юзера формат дати 11.12.2023 07:25, це поле може бути і пустим.
-      `}/> </div>
+      `}/> 
+        </div>
+        
+             
+      {checked&& <> 
+    
       <TextField
           id="filled-multiline-static"
           label="Введіть sfp"
@@ -552,7 +572,10 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
 
         />
       
-        <TextField
+        
+        
+         </>}
+         <TextField
           id="filled-multiline-static"
           label="Відфільтрувати по логіну / даті оновлення, необов'язкове поле"
           type='text'
@@ -561,8 +584,6 @@ await getDataByIPOLTSFP(ipAddressOLT,sfpSelect)
           onChange={(e)=>setLoginText(e.target.value)}
          
         />
-        
-         </>}
           <div className='ml-2 mb-2'> <Button  onClick={handleGetNumbersByOLT}  variant="outlined">Витягнути номера телефонів</Button>
         <Button startIcon={<InfoIcon/>}  onClick={()=>setOpen(true)}  variant="outlined">Інф.</Button>
           
