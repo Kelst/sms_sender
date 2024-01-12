@@ -164,7 +164,7 @@ try {
           <div className='flex  mt-5 mb-7'>
             <div>
             <label>Початкова дата </label>
-       <DatePicker className="p-1 pl-3 rounded-xl text-white "
+       <DatePicker className="p-1 pl-3 rounded-xl text-black "
         selected={selectedDate}
         onChange={date => setSelectedDate(date)}
         showTimeSelect
@@ -174,7 +174,7 @@ try {
          </div>
          <div className='ml-20'>
        <label >Кінцева  дата </label>
-       <DatePicker className=" p-1  pl-3  rounded-xl text-white  "
+       <DatePicker className=" p-1  pl-3  rounded-xl text-black  "
         selected={selectedDateEnd}
         onChange={date => setSelectedDateEnd(date)}
         showTimeSelect
