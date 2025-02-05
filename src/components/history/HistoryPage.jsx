@@ -35,7 +35,7 @@ const handleGraphOpen=()=>{
 
 
 try {
-           axios.post('http://194.8.147.150:3001/getDateForChart',{startDate:selectedDate,endDate:selectedDateEnd})
+           axios.post('http://194.8.147.138:3001/getDateForChart',{startDate:selectedDate,endDate:selectedDateEnd})
             .then(response=>{
               const responseData = response.data;
               console.log(responseData);
@@ -70,7 +70,7 @@ try {
  async function handleDownloadDate() {
   setLoading(true)
     try {
-      const response = await axios.get('http://194.8.147.150:3001/download', {
+      const response = await axios.get('http://194.8.147.138:3001/download', {
         responseType: 'blob',
       });
       setLoading(false)
@@ -93,7 +93,7 @@ try {
       setSmsList([])
 
       setLoading(true)
-      const data=await axios.post("http://194.8.147.150:3001/getHistoryByDates",{startDate:selectedDate,endDate:selectedDateEnd})
+      const data=await axios.post("http://194.8.147.138:3001/getHistoryByDates",{startDate:selectedDate,endDate:selectedDateEnd})
       setLoading(false)
       showInfo(`Знайдено ${data.data.length} записів`)
       setSmsList(data.data)
@@ -101,7 +101,7 @@ try {
     if(filteredValue=="admin"){
       setSmsList([])
       setLoading(true)
-      const data=await axios.post("http://194.8.147.150:3001/getHistoryByAdmin",{startDate:selectedDate,endDate:selectedDateEnd,admin:adminSearch})
+      const data=await axios.post("http://194.8.147.138:3001/getHistoryByAdmin",{startDate:selectedDate,endDate:selectedDateEnd,admin:adminSearch})
       setLoading(false)
       showInfo(`Знайдено ${data.data.length} записів`)
       setSmsList(data.data)
@@ -109,7 +109,7 @@ try {
     if(filteredValue=="abon"){
       setSmsList([])
       setLoading(true)
-      const data=await axios.post("http://194.8.147.150:3001/getHistoryByAbon",{abonName:abonSearch,abonNumber:telSearch})
+      const data=await axios.post("http://194.8.147.138:3001/getHistoryByAbon",{abonName:abonSearch,abonNumber:telSearch})
       setLoading(false)
       showInfo(`Знайдено ${data.data.length} записів`)
       setSmsList(data.data)
@@ -118,7 +118,7 @@ try {
     if(filteredValue=="telegram"){
       setSmsList([])
       setLoading(true)
-      const data=await axios.post("http://194.8.147.150:3001/getHistoryByTelegram",{startDate:selectedDate,endDate:selectedDateEnd})
+      const data=await axios.post("http://194.8.147.138:3001/getHistoryByTelegram",{startDate:selectedDate,endDate:selectedDateEnd})
       setLoading(false)
       showInfo(`Знайдено ${data.data.length} записів`)
       setSmsList(data.data)
@@ -127,7 +127,7 @@ try {
     if(filteredValue=="sms"){
       setSmsList([])
       setLoading(true)
-      const data=await axios.post("http://194.8.147.150:3001/getHistoryByTurbo",{startDate:selectedDate,endDate:selectedDateEnd})
+      const data=await axios.post("http://194.8.147.138:3001/getHistoryByTurbo",{startDate:selectedDate,endDate:selectedDateEnd})
       setLoading(false)
       showInfo(`Знайдено ${data.data.length} записів`)
       setSmsList(data.data)

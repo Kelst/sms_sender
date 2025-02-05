@@ -43,7 +43,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.post('http://194.8.147.150:3001/getById', {
+      const response = await axios.post('http://194.8.147.138:3001/getById', {
         id: tarNumbers
       });
       if(response.data.length>0) {
@@ -83,7 +83,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.get('http://194.8.147.150:3001/switchNumbers', {
+      const response = await axios.get('http://194.8.147.138:3001/switchNumbers', {
         params: {
           ip: ipAddress,
         }
@@ -121,7 +121,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.post('http://194.8.147.150:3001/getByGroup', {
+      const response = await axios.post('http://194.8.147.138:3001/getByGroup', {
         group: group
       });
       if(response.data.length>0) {
@@ -167,7 +167,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       let response
       
       if(!isDateFormatValid(loginText)) {
-        response = await axios.get('http://194.8.147.150:3001/oltNumbersAll', {
+        response = await axios.get('http://194.8.147.138:3001/oltNumbersAll', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -175,7 +175,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           }
         });
       } else {
-        response = await axios.get('http://194.8.147.150:3001/oltNumbersAll', {
+        response = await axios.get('http://194.8.147.138:3001/oltNumbersAll', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -221,7 +221,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setLoading(true);
       let response;
       if(!isDateFormatValid(loginText)) {
-        response = await axios.get('http://194.8.147.150:3001/oltNumbers', {
+        response = await axios.get('http://194.8.147.138:3001/oltNumbers', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -229,7 +229,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           }
         });
       } else {
-        response = await axios.get('http://194.8.147.150:3001/oltNumbers', {
+        response = await axios.get('http://194.8.147.138:3001/oltNumbers', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -270,7 +270,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.get('http://194.8.147.150:3001/addressNumbers', {
+      const response = await axios.get('http://194.8.147.138:3001/addressNumbers', {
         params: {
           budId: budId,
           address: valueAddress

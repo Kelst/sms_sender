@@ -47,8 +47,8 @@ export default function PickShablon({setShablon}) {
   async function fetchData() {
     try {
     
-      const resp = await axios.get('http://194.8.147.150:3001/getShablons');
-      const respCreator = await axios.get(`http://194.8.147.150:3001/getShabCreator?creator=${user}`);
+      const resp = await axios.get('http://194.8.147.138:3001/getShablons');
+      const respCreator = await axios.get(`http://194.8.147.138:3001/getShabCreator?creator=${user}`);
       console.log(respCreator.data);
       const lData = {};
       
@@ -87,7 +87,7 @@ function checkDelete(date) {
   }
 const handleAdd= async(e)=>{
   e.preventDefault()
-  let res=await axios.get(`http://194.8.147.150:3001/addShablon?shablon=${textShablon}&creator=${user}`)
+  let res=await axios.get(`http://194.8.147.138:3001/addShablon?shablon=${textShablon}&creator=${user}`)
   if(res.data==true){
  setFlagShablon(false)
  setTextShablon("")
@@ -108,7 +108,7 @@ const handleAdd= async(e)=>{
   };
 const handleDelete =async (e)=>{
   let id=e.currentTarget.id
-  let res=await axios.get(`http://194.8.147.150:3001/deleteShablon?text=${id}&creator=${user}`)
+  let res=await axios.get(`http://194.8.147.138:3001/deleteShablon?text=${id}&creator=${user}`)
   if(res.data==true){
  setFlagShablon(false)
  setTextShablon("")

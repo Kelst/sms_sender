@@ -25,7 +25,7 @@ const [currentPage, setCurrentPage] = useState(1);
 const listRef = useRef(null); // Посилання на елемент списку
 const  handleResend= async ()=>{
   
-let resp=await axios.get("http://194.8.147.150:3001/sendSms-api-to-user-again");
+let resp=await axios.get("http://194.8.147.138:3001/sendSms-api-to-user-again");
 let flag=resp.data
 if(flag){
   showInfo("Повторно передано на відправку")
@@ -35,7 +35,7 @@ if(flag){
 }
 const loadMoreMessages = () => {
 console.log("NEW REAUST");
-  axios.get(`http://194.8.147.150:3001/messages?page=${currentPage + 1}`)
+  axios.get(`http://194.8.147.138:3001/messages?page=${currentPage + 1}`)
     .then(response => {
       const newMessages = response.data.messages;
       
@@ -69,7 +69,7 @@ useEffect(() => {
     listRef.current.addEventListener('scroll', handleScroll);
   }
 
-  axios.get(`http://194.8.147.150:3001/messages?page=1`)
+  axios.get(`http://194.8.147.138:3001/messages?page=1`)
     .then(response => {
       const initialMessages = response.data.messages;
       const total = response.data.totalMessages;
@@ -82,11 +82,11 @@ useEffect(() => {
     });
 
 async function getTotal() {
-  const total= await axios.get(`http://194.8.147.150:3001/totalSMS`)
+  const total= await axios.get(`http://194.8.147.138:3001/totalSMS`)
   setTotalMessages(total.data.total)
 }
 const interval1=setInterval(async()=>{
-  axios.get(`http://194.8.147.150:3001/messages?page=1`)
+  axios.get(`http://194.8.147.138:3001/messages?page=1`)
   .then(response => {
     const initialMessages = response.data.messages;
     const total = response.data.totalMessages;
@@ -120,7 +120,7 @@ return (()=>{
 //         }
 //         setUser(cookieData)
 //   async function reloadDate() {
-//     axios.get('http://194.8.147.150:3001/pending_sms')
+//     axios.get('http://194.8.147.138:3001/pending_sms')
 //     .then(response => {
 //    console.log(response.data);
 //      setSmsLists(response.data)
@@ -132,7 +132,7 @@ return (()=>{
 //   }
 //   let interval
 //   setLoading(true)
-//   axios.get('http://194.8.147.150:3001/pending_sms')
+//   axios.get('http://194.8.147.138:3001/pending_sms')
 //   .then(response => {
 //     setSmsLists(response.data)
 //   })

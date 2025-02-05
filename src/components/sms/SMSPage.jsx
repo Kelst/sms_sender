@@ -60,7 +60,7 @@ export default function SMSPage() {
         setUser(cookieData)
     // async function fetchData(){
     //   try{
-    //     const response = await axios.get('http://194.8.147.150:3001/getTariff');
+    //     const response = await axios.get('http://194.8.147.138:3001/getTariff');
     //     setListOfTariff(response.data)
     //     console.log(response.data);
     //     }
@@ -113,7 +113,7 @@ export default function SMSPage() {
         }).join(',')
         // numCheck=numCheck.slice(0, -1)
         setNumbers(forRequest.join('\n'))
-        const response = await axios.get(`http://194.8.147.150:3001/infoByUser?numbers=${numCheck}`);
+        const response = await axios.get(`http://194.8.147.138:3001/infoByUser?numbers=${numCheck}`);
         let data=response.data
          lists=data.map(e=>{
           return {
@@ -140,7 +140,7 @@ export default function SMSPage() {
 
         let numCheck=forRequest.join(',')
         // numCheck=numCheck.slice(0, -1)
-        const response = await axios.post('http://194.8.147.150:3001/infoByUserLogins', {
+        const response = await axios.post('http://194.8.147.138:3001/infoByUserLogins', {
           logins: numCheck
         });
         
@@ -210,7 +210,7 @@ let smsList=[]
     
     }else{
 setLoading(true)
-  let resp= await axios.post(`http://194.8.147.150:3001/tariff-balans`,{
+  let resp= await axios.post(`http://194.8.147.138:3001/tariff-balans`,{
       listOfUser:listOfUser,
       shablon:shablon,
       value:value,
@@ -246,7 +246,7 @@ setLoading(true)
         return;
       }
 
-      axios.post('http://194.8.147.150:3001/save-sms',  compressedArray,{
+      axios.post('http://194.8.147.138:3001/save-sms',  compressedArray,{
         headers: {
           'Content-Type': 'application/octet-stream', // або 'application/x-binary'
         },

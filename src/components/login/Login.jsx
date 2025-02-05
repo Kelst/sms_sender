@@ -24,7 +24,7 @@ function LoginPage() {
     setOpen(true)
   }
   async function  logIn(login,pass) {
-   return  axios.post("http://194.8.147.150:3001/login",{login:login.trim(),password:pass.trim()})
+   return  axios.post("http://194.8.147.138:3001/login",{login:login.trim(),password:pass.trim()})
   
   }
   const handleUsername=(e)=>{
