@@ -21,6 +21,7 @@
     "@mui/x-charts": "^6.0.0-alpha.10",
     "@mui/x-date-pickers": "^6.11.1",
     "axios": "^1.4.0",
+    "copy-to-clipboard": "^3.3.3",
     "js-cookie": "^3.0.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

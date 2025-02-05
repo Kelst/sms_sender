@@ -88,7 +88,10 @@ export default function SMSPage() {
     return inputString.replace(punctuationRegex, '');
   }
     async function handleSendSms(e){
+      setLoading(true)
+
       e.preventDefault()
+
       let lists=[]
       if(filter==='none' && checkedLog==false){
        
@@ -137,8 +140,11 @@ export default function SMSPage() {
 
         let numCheck=forRequest.join(',')
         // numCheck=numCheck.slice(0, -1)
-        const response = await axios.get(`http://194.8.147.150:3001/infoByUserLogins?logins=${numCheck}`);
-        let data=response.data
+        const response = await axios.post('http://194.8.147.150:3001/infoByUserLogins', {
+          logins: numCheck
+        });
+        
+                let data=response.data
          lists=data.map(e=>{
           return {
             id:e.id,
@@ -149,7 +155,7 @@ export default function SMSPage() {
           }
         })
         setListOfUser(lists)
-        
+        setLoading(false)
        
       }
 
@@ -321,7 +327,7 @@ setLoading(true)
       </div>
         </div >
          <div className=' mr-[100px] '>
-          <FilterRadioGroup group={group} setGroup={setGroup} countFindNumbers={countFindNumbers} setCountFindNumvers={setCountFindNumvers} checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser} setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
+          <FilterRadioGroup group={group} setGroup={setGroup} countFindNumbers={countFindNumbers} setCountFindNumvers={setCountFindNumvers} checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser}  setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
           <div className='flex flex-col justify-center items-start' >
           <Badge className='absolute left-[350px]' color='info' badgeContent={countFindNumbers} max={100999}>
           <Tooltip title={"Кількість знайдених номерів"} placement="top"> <LocalPhoneIcon /> </Tooltip>
