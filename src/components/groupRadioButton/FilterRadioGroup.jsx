@@ -502,7 +502,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
               onChange={handleNumbers}
               onKeyDown={handleKeyDown}
             />
-            <div className='ml-2 mb-2 flex items-center align-center gap-x-2'>
+            <div className=' mb-2 flex items-center align-center '>
               <Button onClick={handleGetNumbersByTariff} variant="outlined">Витягнути номера телефонів</Button>
               {listTariffLogin.length!==0 && 
                 <ContentCopyIcon className='cursor-pointer' onClick={handleCopyTariffLogins}/>
@@ -520,7 +520,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
               value={group}
               onChange={handleGroup}
             />
-            <div className='ml-2 mb-2 flex items-center align-center gap-x-2'>
+            <div className='mb-2 flex items-center align-center gap-x-2'>
               <Button onClick={handleGetNumbersByGroup} variant="outlined">Витягнути номера телефонів</Button>
               {listGroupLogin.length!==0 && 
                 <ContentCopyIcon className='cursor-pointer' onClick={handleCopyGroupLogins}/>
@@ -539,7 +539,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
               onChange={handleIp}
               onKeyDown={handleKeyDownSwitches}
             />
-            <div className='ml-2 mb-2'>
+            <div className=' mb-2'>
               <Button onClick={handleGetNumbersBySwitch} variant="outlined">Витягнути номера телефонів</Button>
             </div>
           </div>
@@ -585,7 +585,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
               value={loginText}
               onChange={(e)=>setLoginText(e.target.value)}
             />
-            <div className='ml-2 mb-2'>
+            <div className=" mb-2">
               <Button onClick={handleGetNumbersByOLT} variant="outlined">Витягнути номера телефонів</Button>
               <Button startIcon={<InfoIcon/>} onClick={()=>setOpen(true)} variant="outlined">Інф.</Button>
             </div>
@@ -617,7 +617,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
               onChange={(e)=>setBudId(e.target.value)}
               onKeyDown={handleKeyDownAdressBudId}
             />
-            <div className='ml-2 mb-2'>
+            <div className=' mb-2'>
               <Button onClick={handleGetNumbersByAddress} variant="outlined">Витягнути номера телефонів</Button>
             </div>
           </div>

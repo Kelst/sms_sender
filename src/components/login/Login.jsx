@@ -1,116 +1,102 @@
 import React, { useState } from 'react';
-import styles from "./login.module.css"
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Lock } from 'lucide-react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Avatar from '@mui/material/Avatar';
-import CssBaseline from '@mui/material/CssBaseline';
-
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
-import InfoBars from '../info/InfoBars';
-function LoginPage() {
+
+const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [text, setText] = useState('');
-  const [open,setOpen]=useState(false)
-  const navigate=useNavigate()
-  function showInfo(text){
-    setText(text)
-    setOpen(true)
-  }
-  async function  logIn(login,pass) {
-   return  axios.post("http://194.8.147.138:3001/login",{login:login.trim(),password:pass.trim()})
-  
-  }
-  const handleUsername=(e)=>{
-    setUsername(e.currentTarget.value)
-}
-const handlePassword=(e)=>{
-  setPassword(e.currentTarget.value)
-}
-  const handleLogin = async (e) => {
-      e.preventDefault()
-      let data=await logIn(username,password)
-      console.log(data.data.flag);
-      if(data.data.flag==true){
-        Cookies.set('login',username, { expires: 0.02083 });
-        navigate("/sms")
+  const [error, setError] = useState('');
+  const [showError, setShowError] = useState(false);
+  const navigate = useNavigate();
 
-      }else
-      showInfo("Невірний логін або пароль")
+  const login = async (login, pass) => {
+    return axios.post("http://194.8.147.138:3001/login", {
+      login: login.trim(),
+      password: pass.trim()
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await login(username, password);
+      if (data.flag) {
+        Cookies.set('login', username, { expires: 0.02083 });
+        navigate("/provider-selection"); // Змінено з "/sms" на "/provider-selection"
+      } else {
+        setError("Невірний логін або пароль");
+        setShowError(true);
+      }
+    } catch (err) {
+      setError("Помилка підключення");
+      setShowError(true);
+    }
   };
 
   return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <div className="mx-auto h-12 w-12 rounded-full bg-orange-500 flex items-center justify-center">
+            <Lock className="h-6 w-6 text-white" />
+          </div>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
+            Sign in
+          </h2>
+        </div>
+        
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="username" className="sr-only">
+                Login
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="w-full  text-white  bg-slate-800 rounded-lg border border-gray-300 px-4 py-3 placeholder-gray-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                placeholder="Login"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="w-full   bg-slate-800  text-white rounded-lg border border-gray-300 px-4 py-3 placeholder-gray-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
 
-    <Container component="main" maxWidth="xs">
-     
-      <CssBaseline />
-      <Box
-        sx={{
-          position:'absolute',
-          top:0,
-          bottom:0,
-          left:0,
-          right:0,
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'rgb(255, 103, 71)' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Login"
-            name="login"
-            autoComplete="login"
-            autoFocus
-            value={username}
-            onChange={handleUsername}
-          />
-          <TextField
-          value={password}
-          onChange={handlePassword}
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-         
-          <Button
+          <button
             type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2}}
-            
+            className="w-full rounded-lg bg-orange-500 px-4 py-3 text-white font-medium hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Sign In
-          </Button>
-      
-        </Box>
-      </Box>
-      <InfoBars open={open} setOpen={setOpen} text={text}/> 
-    </Container>
+            Sign in
+          </button>
+        </form>
 
-);
-}
+        {showError && (
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default LoginPage;

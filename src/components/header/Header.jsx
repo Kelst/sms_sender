@@ -1,38 +1,66 @@
-import React from 'react'
-import styles from  "./header.module.css"
-import { Link, NavLink, Outlet } from 'react-router-dom'
-function Header() {
-  
+import React, { useState } from 'react';
+import styles from "./header.module.css";
+import { NavLink, Outlet } from 'react-router-dom';
+import { useProvider } from '../../ProviderContext';
+
+function Header({ brands }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { currentBrand, setCurrentBrand } = useProvider();
+
+  const getNavClass = ({ isActive }) => isActive ? styles.active : "";
+
+  const handleBrandChange = (brand) => {
+    setCurrentBrand(brand);
+    localStorage.setItem('currentBrand', JSON.stringify(brand));
+    setIsOpen(false);
+  };
+
   return (
     <>
-    <header>
+      <header>
         <nav className={styles.nav}>
-          <div className='flex justify-center items-end'>
-            <h1 className={styles.logo}>Intelekt  </h1>
-            <h2 className='text-xl ml-2'>Сервіс відправлення повідомлень</h2> 
+          <div className='relative'>
+            <div 
+              className='flex justify-center items-end cursor-pointer'
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <h1 className={styles.logo} style={{ color: currentBrand.color }}>
+                {currentBrand.name}
+              </h1>
+              <h2 className='text-xl ml-2'>Сервіс відправлення повідомлень</h2>
             </div>
-            <ul className={styles.menu}>
-               <li className={styles.menu_item}>
-                <NavLink 
-                  className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles.active : ""
-                  } to='sms'>SMS</NavLink></li>
-                <li className={styles.menu_item}><NavLink
-                className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? styles.active : ""
-              }
-                to='history'>History</NavLink></li>
-                <li className={styles.menu_item}><NavLink 
-                className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? styles.active: ""
-              }
-                to='status'>Status</NavLink></li>
-
-            </ul>
+            
+            {isOpen && (
+              <div className={styles.dropdown}>
+                {brands.map((brand) => (
+                  <div
+                    key={brand.name}
+                    className={styles.dropdownItem}
+                    onClick={() => handleBrandChange(brand)}
+                    style={{ color: brand.color }}
+                  >
+                    {brand.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <ul className={styles.menu}>
+            <li className={styles.menu_item}>
+              <NavLink className={getNavClass} to='sms'>SMS</NavLink>
+            </li>
+            <li className={styles.menu_item}>
+              <NavLink className={getNavClass} to='history'>History</NavLink>
+            </li>
+            <li className={styles.menu_item}>
+              <NavLink className={getNavClass} to='status'>Status</NavLink>
+            </li>
+          </ul>
         </nav>
-    </header>
-    <Outlet/>
+      </header>
+      <Outlet/>
     </>
-  )
+  );
 }
 
-export default Header
+export default Header;

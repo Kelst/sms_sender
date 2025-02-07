@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import zlib, { log } from "react-zlib-js"
-
+import zlib from "react-zlib-js"
 import styles from "./smspage.module.css"
 import TextField from '@mui/material/TextField';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import { InfoIcon, Phone, Send, AlertCircle } from 'lucide-react';
+
 import { Badge, Button, Tooltip } from '@mui/material';
 import DialogShow from '../dialog/DialogShow';
 import RadioGroups from '../groupRadioButton/RadioGroup';
@@ -16,11 +17,12 @@ import ListComponent from '../listComponent/ListComponent';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import MailIcon from '@mui/icons-material/Mail';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import InfoBars from '../info/InfoBars';
-import { list } from 'postcss';
+import { useProvider } from '../../ProviderContext';
+
 export default function SMSPage() {
+  const { currentBrand } = useProvider();
   const [shablon,setShablon]=useState('')
   const [numbers,setNumbers]=useState('') 
   const [tarNumbers,setTarNumbers]=useState('')
@@ -34,18 +36,12 @@ export default function SMSPage() {
   const [loading, setLoading] = React.useState(false);
   const [listOfUser,setListOfUser]=useState([])
   const [listOfSMS,setListOfSms]=useState([])
-  const [listOfTariff,setListOfTariff]=useState([])
   const [infoBars,setInfoBars]=useState(false)
   const [textResp,setTextResp]=useState("")
   const [checkedLog, setCheckedLog] = React.useState(false);
-  const [countFindNumbers,setCountFindNumvers]=useState(0)
-
-  
+  const [countFindNumbers,setCountFindNumvers]=useState(0) 
   const [user,setUser]=useState("")
-  
   const navigate=useNavigate()
-
-  
   function showInfo(text){
     setTextResp(text)
     setInfoBars(true)
@@ -58,17 +54,6 @@ export default function SMSPage() {
           navigate("/login")
         }
         setUser(cookieData)
-    // async function fetchData(){
-    //   try{
-    //     const response = await axios.get('http://194.8.147.138:3001/getTariff');
-    //     setListOfTariff(response.data)
-    //     console.log(response.data);
-    //     }
-    //     catch(e){
-    //       console.log(e);
-    //     }
-    // }
-    // fetchData()
     
   },[])
   function parseNumberStrings(inputString) {
@@ -182,7 +167,20 @@ export default function SMSPage() {
      return  sms.replace(/\[tar\]/g, tar);
     } 
     return sms;
-}   
+}  
+const getProviderName = () => {
+  switch (currentBrand.name.toLowerCase()) {
+    case 'intelekt':
+      return 'Intelekt';
+    case 'opensvit':
+      return 'Opensvit';
+    case 'opticom':
+      return 'Opticom';
+    default:
+      return currentBrand.name;
+  }
+};
+
 let smsList=[]
     if(filter=='none'){
        smsList= lists.map(e=>{
@@ -190,22 +188,15 @@ let smsList=[]
        if(tarNumbers!=""){
          sms=replaceTarText(sms,tarNumbers)
        }
-      //  console.log( {
-      //    id:e.id,
-      //    uid:e.uid,
-      //    tel:e.contacts.value,
-      //    sms:sms,
-      //    type:value,
-      //    sender_sms:user
-      //  });
        return {
-         id:e.id,
-         uid:e.uid,
-         tel:e.contacts.value,
-         sms:sms,
-         type:value,
-         sender_sms:user
-       }
+        id: e.id,
+        uid: e.uid,
+        tel: e.contacts.value,
+        sms: sms,
+        type: value,
+        sender_sms: user,
+        provider: getProviderName() // Add provider information
+      }
      })
     
     }else{
@@ -214,7 +205,8 @@ setLoading(true)
       listOfUser:listOfUser,
       shablon:shablon,
       value:value,
-      user:user
+      user:user,
+       provider: getProviderName() 
      })
       smsList=resp.data
   }
@@ -255,7 +247,7 @@ setLoading(true)
    
     setListOfSms([])
     showInfo("Повідомлення записані в базу даних та поставлені в чергу на відправлення")
-    setLoading(fasle)
+    setLoading(false)
 
     
     
@@ -269,102 +261,130 @@ setLoading(true)
     setLoading(false)
   })
     });
-
-
-
-
-
-  
-
-
-    //зробити api отримання 
   }
 
-  return (
-    <div className={styles.container}>
-      {
-        loading&& <LoaderData/>
-      }
-     <InfoBars open={infoBars} setOpen={setInfoBars} text={textResp} />
-      <h2 className={styles.title}>Відправлення смс клієнтам <span className={styles.title_strong}>TurboSMS/Telegram Bot</span></h2>
-      <Box className={styles.content}
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '40ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      
-      
-      <div className='flex flex-col items-start ml-3'>
-      <RadioGroups value={value} setValue={setValue} listOfSMS={listOfSMS} setListOfSms={setListOfSms} />
-      <div className='relative'>
-      <TextField
-          id="standard-multiline-flexible"
-          label="Шаблон sms"
-          
-          multiline
-          maxRows={5}
-          width="600px"
-          variant="standard"
-          className='focus:bg-slate-800'
-          style={{ width: '550px' }}
-          value={shablon}
-          onChange={handleShablon}
-        />
-     <IconButton  onClick={handleClickOpen}>
-          <InfoOutlinedIcon/>
-      </IconButton>
-      
-      </div>
-      
-      <PickShablon  setShablon={setShablon}/>
-      <div  className='flex flex-col items-start gap-4 ml-[-15px] mb-10'>
-      <ListComponent  smsList={listOfSMS}/>
-      {listOfSMS.length>0? <Button onClick={handleWriteDbSMS} variant="outlined"  className=''>Відправити sms</Button>: <Button  variant="outlined"  disabled  className=''>Відправити sms</Button>}
-     
-      </div>
-        </div >
-         <div className=' mr-[100px] '>
-          <FilterRadioGroup group={group} setGroup={setGroup} countFindNumbers={countFindNumbers} setCountFindNumvers={setCountFindNumvers} checkedLog={checkedLog} setCheckedLog={setCheckedLog} ipAddressOLT={ipAddressOLT} setIpAddressOLT={setIpAddressOLT} sfpSelect={sfpSelect} setSfpSelect={setSfpSelect} setListOfSms={setListOfSms} setListOfUser={setListOfUser}  setLoading={setLoading}  value={filter} setValue={setFilter} tarNumbers={tarNumbers} setTarNumbers={setTarNumbers} ipAddress={ipAddress} setIpAddress={setIpAddress} setNumbers={setNumbers}/>
-          <div className='flex flex-col justify-center items-start' >
-          <Badge className='absolute left-[350px]' color='info' badgeContent={countFindNumbers} max={100999}>
-          <Tooltip title={"Кількість знайдених номерів"} placement="top"> <LocalPhoneIcon /> </Tooltip>
-</Badge>
-          <TextField
-          id="filled-multiline-static"
-          
-          label={!checkedLog?' Введіть номери телефонів':' Введіть список логінів'} 
-          multiline
-          rows={10}
-          
-          value={numbers}
-          onChange={handleNumbers}
+  const brandStyles = {
+    button: `bg-[${currentBrand.color}] hover:bg-[${currentBrand.color}]/90`,
+    text: `text-[${currentBrand.color}]`,
+    border: `border-[${currentBrand.color}]`,
+    badge: `bg-[${currentBrand.color}]/10 text-[${currentBrand.color}]`,
+  };
+  
+  return (<>
+    {loading && <LoaderData />}
+    <div className="min-h-screen bg-slate-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-6">
+          Відправлення смс клієнтам{' '}
+          <span style={{ color: currentBrand.color }}>
+            TurboSMS/Telegram Bot
+          </span>
+        </h1>
 
-        />
-        <Tooltip title={shablon==="" || numbers===""?"Введіть текст повідомлення, та номери телефонів":""} placement="top-end">
-          <div>
-          {(shablon==="") || (numbers==="")?<Button  className='animate-pulse' variant="outlined"   disabled  >Згенерувати шаблон</Button>:<Button variant="outlined" onClick={handleSendSms} className='animate-pulse' >Згенерувати шаблон</Button>}
-        
-        </div>
-        </Tooltip>
-        
-        </div>
-        
-         </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+          <div className="space-y-4">
+            <div className="bg-white rounded-xl shadow p-4 md:p-6">
+              <RadioGroups 
+                value={value} 
+                setValue={setValue} 
+                listOfSMS={listOfSMS}
+                setListOfSms={setListOfSms}
+                brandColor={currentBrand.color}
+              />
+            </div>
 
+            <div className="bg-white rounded-xl shadow p-4 md:p-6">
+              <textarea
+                className="w-full min-h-[120px] p-3 border rounded-lg bg-slate-900 text-white placeholder-slate-400 focus:ring-2 focus:border-transparent"
+                style={{ '--tw-ring-color': currentBrand.color }}
+                placeholder="Введіть шаблон SMS..."
+                value={shablon}
+                onChange={(e) => setShablon(e.target.value)}
+              />
+              <PickShablon setShablon={setShablon} brandColor={currentBrand.color} />
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-4 md:p-6">
+              <ListComponent smsList={listOfSMS} />
+              <button
+                onClick={handleWriteDbSMS}
+                disabled={listOfSMS.length === 0}
+                className="mt-4 flex items-center justify-center w-full gap-2 px-6 py-3 rounded-lg transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                style={listOfSMS.length > 0 ? { 
+                  backgroundColor: currentBrand.color,
+                  color: 'white'
+                } : {}}
+              >
+                <Send size={18} />
+                Відправити SMS
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-white rounded-xl shadow p-4 md:p-6">
+              <FilterRadioGroup 
+                {...{
+                  group, setGroup, countFindNumbers, setCountFindNumvers,
+                  checkedLog, setCheckedLog, ipAddressOLT, setIpAddressOLT,
+                  sfpSelect, setSfpSelect, setListOfSms, setListOfUser,
+                  setLoading, value: filter, setValue: setFilter, tarNumbers,
+                  setTarNumbers, ipAddress, setIpAddress, setNumbers,
+                  brandColor: currentBrand.color
+                }}
+              />
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-4 md:p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-medium">
+                  {!checkedLog ? 'Номери телефонів' : 'Список логінів'}
+                </h3>
+                <div 
+                  className="flex items-center gap-2 px-3 py-1 rounded-full"
+                  style={{ 
+                    backgroundColor: `${currentBrand.color}10`,
+                    color: currentBrand.color 
+                  }}
+                >
+                  <Phone size={16} />
+                  <span className="text-sm font-medium">{countFindNumbers}</span>
+                </div>
+              </div>
+
+              <textarea
+                className="w-full min-h-[200px] p-3 border rounded-lg bg-slate-900 text-white placeholder-slate-400 focus:ring-2 focus:border-transparent"
+                style={{ '--tw-ring-color': currentBrand.color }}
+                placeholder={!checkedLog ? 'Введіть номери телефонів' : 'Введіть список логінів'}
+                value={numbers}
+                onChange={(e) => setNumbers(e.target.value)}
+              />
+
+              <button
+                onClick={handleSendSms}
+                disabled={!shablon || !numbers}
+                className="mt-4 flex items-center justify-center w-full gap-2 px-6 py-3 rounded-lg transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                style={shablon && numbers ? { 
+                  backgroundColor: currentBrand.color,
+                  color: 'white'
+                } : {}}
+              >
+                <AlertCircle size={18} />
+                Згенерувати шаблон
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <DialogShow open={open} setOpen={setOpen} brandColor={currentBrand.color} />
       
-      </Box>
-      
-     <DialogShow open={open} setOpen={setOpen} text={`За допомогою цього поля ви можете 
-     сформувати шаблон sms повідомлення:\nу квадратні дужки ви можете
-      вставити наступні дані [tar],[log],[bal]:\n
-      \n [tar]-тарифний план
-      \n[log]-логін
-      \n[bal]-баланс
-      `}/>
+      {infoBars && (
+        <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-md animate-slide-up">
+          <p className="text-slate-700">{textResp}</p>
+        </div>
+      )}
     </div>
-    
-  )
+    </>
+  );
 }
