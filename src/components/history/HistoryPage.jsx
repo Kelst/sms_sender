@@ -40,7 +40,7 @@ export default function HistoryPage() {
 
   const handleGraphOpen = async () => {
     try {
-      const response = await axios.post('http://194.8.147.138:3001/getDateForChart', {
+      const response = await axios.post('http://sms.multiprovider.info/api/getDateForChart', {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });
@@ -64,7 +64,7 @@ export default function HistoryPage() {
   async function handleDownloadDate() {
     setLoading(true);
     try {
-      const response = await axios.get('http://194.8.147.138:3001/download', {
+      const response = await axios.get('http://sms.multiprovider.info/api/download', {
         responseType: 'blob',
       });
       setLoading(false);
@@ -85,7 +85,7 @@ export default function HistoryPage() {
     if (filteredValue === "all") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByDates", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByDates", {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });
@@ -96,7 +96,7 @@ export default function HistoryPage() {
     if (filteredValue === "opticom") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByOpticom", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByOpticom", {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });
@@ -107,7 +107,7 @@ export default function HistoryPage() {
     if (filteredValue === "opensvit") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByOpensvit", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByOpensvit", {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });
@@ -118,7 +118,7 @@ export default function HistoryPage() {
     if (filteredValue === "admin") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByAdmin", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByAdmin", {
         startDate: selectedDate,
         endDate: selectedDateEnd,
         admin: adminSearch
@@ -130,7 +130,7 @@ export default function HistoryPage() {
     if (filteredValue === "abon") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByAbon", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByAbon", {
         abonName: abonSearch,
         abonNumber: telSearch
       });
@@ -141,7 +141,7 @@ export default function HistoryPage() {
     if (filteredValue === "telegram") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByTelegram", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByTelegram", {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });
@@ -152,7 +152,7 @@ export default function HistoryPage() {
     if (filteredValue === "sms") {
       setSmsList([]);
       setLoading(true);
-      const data = await axios.post("http://194.8.147.138:3001/getHistoryByTurbo", {
+      const data = await axios.post("http://sms.multiprovider.info/api/getHistoryByTurbo", {
         startDate: selectedDate,
         endDate: selectedDateEnd
       });

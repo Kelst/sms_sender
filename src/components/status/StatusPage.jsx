@@ -22,7 +22,7 @@ export default function StatusPage() {
 
   const handleResend = async () => {
     try {
-      const resp = await axios.get("http://194.8.147.138:3001/sendSms-api-to-user-again");
+      const resp = await axios.get("http://sms.multiprovider.info/api/sendSms-api-to-user-again");
       showInfo(resp.data ? "Повторно передано на відправку" : "Помилка при повторному відправленні смс");
     } catch (error) {
       showInfo("Помилка при відправленні");
@@ -30,7 +30,7 @@ export default function StatusPage() {
   };
 
   const loadMoreMessages = () => {
-    axios.get(`http://194.8.147.138:3001/messages?page=${currentPage + 1}`)
+    axios.get(`http://sms.multiprovider.info/api/messages?page=${currentPage + 1}`)
       .then(response => {
         setSmsLists(prev => [...prev, ...response.data.messages]);
         setCurrentPage(prev => prev + 1);
@@ -59,7 +59,7 @@ export default function StatusPage() {
     setUser(cookieData);
 
     const fetchInitialMessages = () => {
-      axios.get(`http://194.8.147.138:3001/messages?page=1`)
+      axios.get(`http://sms.multiprovider.info/api/messages?page=1`)
         .then(response => {
           setSmsLists(response.data.messages);
           setTotalMessages(response.data.totalMessages);
@@ -69,7 +69,7 @@ export default function StatusPage() {
 
     const fetchTotal = async () => {
       try {
-        const total = await axios.get(`http://194.8.147.138:3001/totalSMS`);
+        const total = await axios.get(`http://sms.multiprovider.info/api/totalSMS`);
         setTotalMessages(total.data.total);
       } catch (error) {
         console.error('Error fetching total:', error);
