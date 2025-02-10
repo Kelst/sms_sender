@@ -14,8 +14,10 @@ import DialogShow from '../dialog/DialogShow';
 import InfoIcon from '@mui/icons-material/Info';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from "copy-to-clipboard";
+import { useProvider } from '../../ProviderContext';
 
 function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumvers, checkedLog, setCheckedLog, setListOfSms, setListOfUser, value, setValue, tarNumbers, setTarNumbers, ipAddress, setIpAddress, setLoading, setNumbers, ipAddressOLT, setIpAddressOLT, sfpSelect, setSfpSelect}) {
+  const { currentBrand } = useProvider(); // Отримуємо поточного провайдера з контексту
 
   const [infoBars, setInfoBars] = useState(false)
   const [open, setOpen] = useState(false)
@@ -44,7 +46,8 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setLoading(true);
 
       const response = await axios.post('http://sms.multiprovider.info/api/getById', {
-        id: tarNumbers
+        id: tarNumbers,
+        provider:currentBrand?.name
       });
       if(response.data.length>0) {
         let resp = response.data.map(e => {
@@ -86,6 +89,8 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       const response = await axios.get('http://sms.multiprovider.info/api/switchNumbers', {
         params: {
           ip: ipAddress,
+          provider:currentBrand?.name
+
         }
       });
       if(response.data.length>0) {
@@ -122,7 +127,9 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setLoading(true);
 
       const response = await axios.post('http://sms.multiprovider.info/api/getByGroup', {
-        group: group
+        group: group,
+        provider:currentBrand?.name
+
       });
       if(response.data.length>0) {
         let resp = response.data.map(e => {
@@ -172,6 +179,8 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
             ip: ipAddressOLT,
             sfp: sfpSelect,
             login: loginText,
+            provider:currentBrand?.name
+
           }
         });
       } else {
@@ -179,7 +188,9 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
-            last_date: loginText
+            last_date: loginText,
+            provider:currentBrand?.name
+
           }
         });
       }
@@ -226,6 +237,8 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
             ip: ipAddressOLT,
             sfp: sfpSelect,
             login: loginText,
+            provider:currentBrand?.name
+
           }
         });
       } else {
@@ -233,7 +246,9 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
-            last_date: loginText
+            last_date: loginText,
+            provider:currentBrand?.name
+
           }
         });
       }
@@ -273,7 +288,9 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       const response = await axios.get('http://sms.multiprovider.info/api/addressNumbers', {
         params: {
           budId: budId,
-          address: valueAddress
+          address: valueAddress,
+          provider:currentBrand?.name
+
         }
       });
       if(response.data.length>0) {
@@ -466,6 +483,12 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
     <FormControl className='flex justify-center'>
       <InfoBars open={infoBars} setOpen={setInfoBars} text={textResp} />
       <FormLabel id="demo-controlled-radio-buttons-group">Вибрати номери телефонів</FormLabel>
+      <Typography 
+          className="text-sm font-medium"
+          style={{ color: currentBrand?.color }}
+        >
+          Провайдер: {currentBrand?.name}
+        </Typography>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"

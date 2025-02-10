@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import Header from './components/header/Header'
+import Header from './components/header/Header';
 import SMSPage from './components/sms/SMSPage';
 import HistoryPage from './components/history/HistoryPage';
 import StatusPage from './components/status/StatusPage';
 import LoginPage from './components/login/Login';
-
 import { ProviderContext } from './ProviderContext';
 import Cookies from 'js-cookie';
 import ProviderSelectionPage from './ProviderSelectionPage';
@@ -24,12 +23,25 @@ function WrappedHeader() {
   });
 
   const login = Cookies.get('login');
+  const providerAccess = Cookies.get('providerAccess');
   
-  if (!login) {
+  // Redirect to login if not authenticated
+  if (!login || !providerAccess) {
     return <Navigate to="/login" />;
   }
 
+  // Redirect to provider selection if no brand selected
   if (!currentBrand) {
+    return <Navigate to="/provider-selection" />;
+  }
+
+  // Check if user has access to selected provider
+  const parsedAccess = JSON.parse(providerAccess);
+  const hasAccess = parsedAccess[currentBrand.name.toLowerCase()] === 1;
+  
+  if (!hasAccess) {
+    // Clear invalid selection and redirect
+    localStorage.removeItem('currentBrand');
     return <Navigate to="/provider-selection" />;
   }
 
@@ -88,4 +100,4 @@ function App() {
   return <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />;
 }
 
-export default App
+export default App;

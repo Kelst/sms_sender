@@ -23,8 +23,15 @@ const LoginPage = () => {
     try {
       const { data } = await login(username, password);
       if (data.flag) {
+        // Store login and provider access in cookies
         Cookies.set('login', username, { expires: 0.02083 });
-        navigate("/provider-selection"); // Змінено з "/sms" на "/provider-selection"
+        Cookies.set('providerAccess', JSON.stringify(data.providerAccess), { expires: 0.02083 });
+        Cookies.set('aid', data.aid, { expires: 0.02083 });
+        
+        // Clear any existing provider selection
+        localStorage.removeItem('currentBrand');
+        
+        navigate("/provider-selection");
       } else {
         setError("Невірний логін або пароль");
         setShowError(true);
