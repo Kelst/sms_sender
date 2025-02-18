@@ -87,7 +87,9 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByDates", {
         startDate: selectedDate,
-        endDate: selectedDateEnd
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
+
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -98,7 +100,8 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByOpticom", {
         startDate: selectedDate,
-        endDate: selectedDateEnd
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -109,7 +112,8 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByOpensvit", {
         startDate: selectedDate,
-        endDate: selectedDateEnd
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -121,7 +125,8 @@ export default function HistoryPage() {
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByAdmin", {
         startDate: selectedDate,
         endDate: selectedDateEnd,
-        admin: adminSearch
+        admin: adminSearch,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -132,7 +137,8 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByAbon", {
         abonName: abonSearch,
-        abonNumber: telSearch
+        abonNumber: telSearch,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -143,7 +149,8 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByTelegram", {
         startDate: selectedDate,
-        endDate: selectedDateEnd
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
@@ -154,7 +161,8 @@ export default function HistoryPage() {
       setLoading(true);
       const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByTurbo", {
         startDate: selectedDate,
-        endDate: selectedDateEnd
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
       });
       setLoading(false);
       showInfo(`Знайдено ${data.data.length} записів`);
