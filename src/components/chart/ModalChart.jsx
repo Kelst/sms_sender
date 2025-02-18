@@ -37,7 +37,7 @@ export default function ModalChart({open,setOpen,dataForChart,countSMS}) {
   
 //      function fetchData() {
 //         try {
-//           const response =  axios.post('http://sms.multiprovider.info/api/getDateForChart', {
+//           const response =  axios.post('https://sms.multiprovider.info/api/getDateForChart', {
 //             startDate:"2023-08-23T13:09:09.000Z",
 //             endDate:"2023-09-25T13:09:09.000Z"
 //         }).then(response=>{

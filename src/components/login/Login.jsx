@@ -12,7 +12,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const login = async (login, pass) => {
-    return axios.post("http://sms.multiprovider.info/api/login", {
+    return axios.post("https://sms.multiprovider.info/api/login", {
       login: login.trim(),
       password: pass.trim()
     });

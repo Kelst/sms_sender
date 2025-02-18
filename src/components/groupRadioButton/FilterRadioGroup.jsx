@@ -45,7 +45,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.post('http://sms.multiprovider.info/api/getById', {
+      const response = await axios.post('https://sms.multiprovider.info/api/getById', {
         id: tarNumbers,
         provider:currentBrand?.name
       });
@@ -86,7 +86,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.get('http://sms.multiprovider.info/api/switchNumbers', {
+      const response = await axios.get('https://sms.multiprovider.info/api/switchNumbers', {
         params: {
           ip: ipAddress,
           provider:currentBrand?.name
@@ -126,7 +126,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.post('http://sms.multiprovider.info/api/getByGroup', {
+      const response = await axios.post('https://sms.multiprovider.info/api/getByGroup', {
         group: group,
         provider:currentBrand?.name
 
@@ -174,7 +174,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       let response
       
       if(!isDateFormatValid(loginText)) {
-        response = await axios.get('http://sms.multiprovider.info/api/oltNumbersAll', {
+        response = await axios.get('https://sms.multiprovider.info/api/oltNumbersAll', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -184,7 +184,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           }
         });
       } else {
-        response = await axios.get('http://sms.multiprovider.info/api/oltNumbersAll', {
+        response = await axios.get('https://sms.multiprovider.info/api/oltNumbersAll', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -232,7 +232,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setLoading(true);
       let response;
       if(!isDateFormatValid(loginText)) {
-        response = await axios.get('http://sms.multiprovider.info/api/oltNumbers', {
+        response = await axios.get('https://sms.multiprovider.info/api/oltNumbers', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -242,7 +242,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
           }
         });
       } else {
-        response = await axios.get('http://sms.multiprovider.info/api/oltNumbers', {
+        response = await axios.get('https://sms.multiprovider.info/api/oltNumbers', {
           params: {
             ip: ipAddressOLT,
             sfp: sfpSelect,
@@ -285,7 +285,7 @@ function FilterRadioGroup({ group, setGroup, countFindNumbers, setCountFindNumve
       setListOfSms([])
       setLoading(true);
 
-      const response = await axios.get('http://sms.multiprovider.info/api/addressNumbers', {
+      const response = await axios.get('https://sms.multiprovider.info/api/addressNumbers', {
         params: {
           budId: budId,
           address: valueAddress,
