@@ -206,9 +206,12 @@ setLoading(true)
       shablon:shablon,
       value:value,
       user:user,
-       provider: getProviderName() 
+      provider: getProviderName() 
      })
-      smsList=resp.data
+     smsList = resp.data.map(sms => ({
+      ...sms,
+      provider: getProviderName()
+    }));      
   }
  
    console.log(smsList);
