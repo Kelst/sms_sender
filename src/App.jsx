@@ -13,7 +13,8 @@ import ProviderSelectionPage from './ProviderSelectionPage';
 const brands = [
   { name: 'Intelekt', color: '#E53E3E' },
   { name: 'Opensvit', color: '#3182CE' }, 
-  { name: 'Opticom', color: '#38A169' }
+  { name: 'Opticom', color: '#38A169' },
+  { name: 'Veles', color: '#A1CAE2' }
 ];
 
 function WrappedHeader() {
