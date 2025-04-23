@@ -176,6 +176,8 @@ const getProviderName = () => {
       return 'Opensvit';
     case 'opticom':
       return 'Opticom';
+      case 'veles':
+        return 'Veles';
     default:
       return currentBrand.name;
   }

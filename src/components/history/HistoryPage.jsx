@@ -107,6 +107,18 @@ export default function HistoryPage() {
       showInfo(`Знайдено ${data.data.length} записів`);
       setSmsList(data.data);
     }
+    if (filteredValue === "veles") {
+      setSmsList([]);
+      setLoading(true);
+      const data = await axios.post("https://sms.multiprovider.info/api/getHistoryByVeles", {
+        startDate: selectedDate,
+        endDate: selectedDateEnd,
+        provider: currentBrand.name
+      });
+      setLoading(false);
+      showInfo(`Знайдено ${data.data.length} записів`);
+      setSmsList(data.data);
+    }
     if (filteredValue === "opensvit") {
       setSmsList([]);
       setLoading(true);

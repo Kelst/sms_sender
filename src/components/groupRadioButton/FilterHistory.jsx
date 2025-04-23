@@ -33,6 +33,7 @@ function FilterHistory({value,setValue}) {
       <FormControlLabel value="telegram" control={<Radio />} label="Телеграм"/>
       <FormControlLabel value="sms" control={<Radio />} label="Turbo SMS"/>
       <FormControlLabel value="opticom" control={<Radio />} label="Opticom"/>
+      <FormControlLabel value="veles" control={<Radio />} label="Veles"/>
       <FormControlLabel value="opensvit" control={<Radio />} label="Opensvit"/>
 
 
